@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Владимир Степанов](https://up.htmlacademy.ru/javascript/20/user/473119).
-* Наставник: Алексей Чимочихин.
+* Наставник: [Алексей Чимочихин](https://up.htmlacademy.ru/javascript/20/user/1449979).
 
 ---
 
