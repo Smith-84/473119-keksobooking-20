@@ -21,43 +21,36 @@ var createAdsData = function () {
 };
 
 var getAds = function (photoNumber) {
+  var maxRooms = 3;
+  var minPrice = 100;
+  var maxPrice = 200;
+  var maxGuests = 4;
+
   var author = {
     'avatar': 'img/avatars/user0' + String(photoNumber) + '.png'
   };
 
   var mapLocation = {
-    /*
-    1200 - это максимальная ширина верски и блока...взял из css
-    */
-    'x': String(getRandomInt(0, 1200)),
+    'x': String(getRandomInt(0, 1160)),
     'y': String(getRandomInt(130, 630))
   };
 
   var typeHouse = ['palace', 'flat', 'house', 'bungalo'];
   var typeFeatures = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
   var availableTimes = ['12:00', '13:00', '14:00'];
-  /*
-   массив строк случайной длины
-   Вообще непонятно...максимальная длина этого массива 3?
-   */
-  var photoHouse = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg',
-    'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 
   var offer = {
-    /*
-    Откуда данные брать-то  title, price и т.д
-    */
     'title': '',
     'address': mapLocation.x + ',' + mapLocation.y,
-    'price': 0,
+    'price': getRandomInt(minPrice, maxPrice),
     'type': typeHouse[getRandomInt(0, typeHouse.length - 1)],
-    'rooms': 0,
-    'guests': 0,
+    'rooms': getRandomInt(1, maxRooms),
+    'guests': getRandomInt(1, maxGuests),
     'checkin': availableTimes[getRandomInt(0, availableTimes.length - 1)],
     'checkout': availableTimes[getRandomInt(0, availableTimes.length - 1)],
     'features': typeFeatures[getRandomInt(0, typeFeatures.length - 1)],
     'description': '',
-    'photos': photoHouse[getRandomInt(0, typeFeatures.length - 1)]
+    'photos': []
   };
 
   var newAds = {
@@ -69,28 +62,28 @@ var getAds = function (photoNumber) {
 };
 
 
-var createNewElement = function () {
-  /*
-   Цитата:
-    У метки укажите:
-    Координаты: style="left: {{location.x + смещение по X}}px; top: {{location.y + смещение по Y}}px;"
-    .....
-
-  Откуда это смещение брать?...или вот прям так прописывать тупо newAds.style.left = {location.x + смещение по X}}px;
-  и так далее?
-  ??????
-
-   */
+var createNewElement = function (ads) {
+  var offsetX = 20;
+  var offsetY = 40;
   var templateAds = document.querySelector('#pin').content.querySelector('.map__pin');
-  var ads = createAdsData();
-  for (var i = 0; i < ads.length; i++) {
-    var newAdsBlock = templateAds.cloneNode(true);
-    newAdsBlock.style.left = ads[i].location.x + 'px';
-    newAdsBlock.style.top = ads[i].location.y + 'px';
-    newAdsBlock.children[0].src = ads[i].author.avatar;
-    newAdsBlock.children[0].alt = ads[i].offer.title;
-  }
-
+  var newAdsBlock = templateAds.cloneNode(true);
+  newAdsBlock.style.left = String(Number(ads.location.x) + offsetX) + 'px';
+  newAdsBlock.style.top = String(Number(ads.location.y) + offsetY) + 'px';
+  newAdsBlock.children[0].src = ads.author.avatar;
+  newAdsBlock.children[0].alt = ads.offer.title;
+  return newAdsBlock;
 };
 
-createNewElement();
+
+var renderNewAds = function () {
+  var cityMapAds = document.querySelector('.map__pins');
+  var ads = createAdsData();
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < ads.length; i++) {
+    var newAdsElement = createNewElement(ads[i]);
+    fragment.appendChild(newAdsElement);
+  }
+  cityMapAds.appendChild(fragment);
+};
+
+renderNewAds();
