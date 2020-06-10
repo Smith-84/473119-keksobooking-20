@@ -18,7 +18,7 @@ var createAdsData = function () {
   return myAds;
 };
 
-var createAdData = function (NumberAd) {
+var createAdData = function (numberAd) {
   var maxRooms = 3;
   var minPrice = 100;
   var maxPrice = 200;
@@ -30,7 +30,7 @@ var createAdData = function (NumberAd) {
   };
 
   var author = {
-    'avatar': 'img/avatars/user0' + String(NumberAd) + '.png'
+    'avatar': 'img/avatars/user0' + String(numberAd) + '.png'
   };
 
   var mapLocation = {
@@ -43,7 +43,7 @@ var createAdData = function (NumberAd) {
   var availableTimes = ['12:00', '13:00', '14:00'];
 
   var offer = {
-    'title': 'ad title-0' + String(NumberAd),
+    'title': 'ad title-0' + String(numberAd),
     'address': String(mapLocation.x) + ',' + String(mapLocation.y),
     'price': getRandomInt(minPrice, maxPrice),
     'type': typeHouse[getRandomInt(0, typeHouse.length - 1)],
@@ -70,8 +70,8 @@ var createNewElement = function (ad) {
   var templateAds = document.querySelector('#pin').content.querySelector('.map__pin');
   var newAdsBlock = templateAds.cloneNode(true);
   var image = newAdsBlock.querySelector('img');
-  newAdsBlock.style.left = String(ad.location.x + pinWidth / 2) + 'px';
-  newAdsBlock.style.top = String(ad.location.y + pinHeight) + 'px';
+  newAdsBlock.style.left = String(ad.location.x - pinWidth / 2) + 'px';
+  newAdsBlock.style.top = String(ad.location.y - pinHeight) + 'px';
   image.src = ad.author.avatar;
   image.alt = ad.offer.title;
   return newAdsBlock;
