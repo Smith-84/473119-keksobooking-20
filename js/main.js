@@ -64,7 +64,7 @@ var createAdData = function (numberAd) {
 };
 
 
-var createNewElement = function (ad) {
+var createMapPin = function (ad) {
   var pinWidth = 50;
   var pinHeight = 70;
   var templateAds = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -77,22 +77,52 @@ var createNewElement = function (ad) {
   return newAdsBlock;
 };
 
+var createCard = function (ad) {
+  var templateCard= document.querySelector('#card').content.querySelector('.map__card');
+  var newCardBlock = templateCard.cloneNode(true);
 
-var renderNewAds = function (map, adsData) {
+  var popupTitle = newCardBlock.querySelector('.popup__title')
+  popupTitle.textContent = ad.offer.title
+  var popupAddress = newCardBlock.querySelector('.popup__text--address')
+  popupAddress.textContent = ad.offer.address
+  var popupPrice =newCardBlock.querySelector('.popup__text--price')
+  popupPrice.textContent = ad.offer.price + '₽/ночь.'
+  var popupType = newCardBlock.querySelector('.popup__type')
+  popupType.textContent = ad.offer.type
+  var popupCapacity = newCardBlock.querySelector('.popup__text--capacity')
+  popupCapacity.textContent = ad.offer.rooms + ' комнаты для ' + ad.offer.guests + ' гостей'
+  var popupTime = newCardBlock.querySelector('.popup__text--time')
+  popupTime.textContent = 'Заезд после ' + ad.offer.checkin + 'выезд до ' + ad.offer.checkout
+  var popupFeatures =newCardBlock.querySelector(' .popup__features')
+  popupFeatures.textContent = ad.offer.features
+  var popupDesc = newCardBlock.querySelector('.popup__description')
+  popupDesc.textContent = ad.offer.description
+  var popupPhotos = newCardBlock.querySelector('.popup__photos')
+  var popupAvatar = newCardBlock.querySelector('.popup__avatar')
+  popupAvatar.src = ad.author.avatar
+
+  return newCardBlock
+};
+
+var renderNewElements = function (adsData, func) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < adsData.length; i++) {
-    var newAdsElement = createNewElement(adsData[i]);
-    fragment.appendChild(newAdsElement);
+    var newElement = func(adsData[i]);
+    fragment.appendChild(newElement);
   }
-  map.appendChild(fragment);
+  return fragment
 };
 
 var init = function () {
   var cityMap = document.querySelector('.map');
   var cityMapAds = document.querySelector('.map__pins');
+  var mapFilters = document.querySelector('.map__filters-container');
+
   var adsData = createAdsData();
   cityMap.classList.remove('map--faded');
-  renderNewAds(cityMapAds, adsData);
+
+  cityMapAds.appendChild(renderNewElements(adsData, createMapPin));
+  mapFilters.before(renderNewElements(adsData, createCard));
 };
 
 
