@@ -1,14 +1,8 @@
 'use strict';
 
 var ADS_COUNT = 8;
-var MAP_PIN_WIDTH = 65;
-var MAP_PIN_HEIGHT = 65;
-var fieldsetForm = document.querySelectorAll('fieldset');
-var selectForm = document.querySelectorAll('select');
 var mapPin = document.querySelector('.map__pin--main');
-var cityMap = document.querySelector('.map');
 var adForm = document.querySelector('.ad-form');
-
 
 var getRandomInt = function (min, max) {
   min = Math.ceil(min);
@@ -104,6 +98,8 @@ var renderNewAds = function (map, adsData) {
 
 var setupAddress = function (activePageFlag) {
   var address = document.querySelector('#address')
+  var MAP_PIN_WIDTH = 65;
+  var MAP_PIN_HEIGHT = 65;
   if (activePageFlag) {
     address.value = (mapPin.offsetLeft + MAP_PIN_WIDTH / 2) + ',' + (MAP_PIN_HEIGHT + mapPin.offsetTop + 10)
   } else {
@@ -114,9 +110,10 @@ var setupAddress = function (activePageFlag) {
 
 var setupRelatedTime = function () {
   var timeForm = document.querySelector('.ad-form__element--time')
+  var timeIn = document.querySelector('#timein')
+  var timeOut = document.querySelector('#timeout')
+
   timeForm.addEventListener('change', function (evt) {
-    var timeIn = document.querySelector('#timein')
-    var timeOut = document.querySelector('#timeout')
     if (evt.target == timeIn) {
       timeOut.value = evt.target.value
     } else {
@@ -125,44 +122,54 @@ var setupRelatedTime = function () {
   })
 }
 
-var setupPageInactive = function () {
-  for (var i = 0; i < fieldsetForm.length; i++) {
-    fieldsetForm[i].disabled = true;
-  }
 
-  for (var i = 0; i < selectForm.length; i++) {
-    selectForm[i].disabled = true;
+var setupElementStatus = function (disabledStatus, elements) {
+  if (disabledStatus) {
+    for (var i = 0; i < elements.length; i++) {
+      elements[i].disabled = false;
+    }
+  } else {
+    for (var i = 0; i < elements.length; i++) {
+      elements[i].disabled = true;
+    }
   }
-  setupAddress(false)
-};
-
-var setupPageActive = function () {
-  cityMap.classList.remove('map--faded');
-  adForm.classList.remove('ad-form--disabled');
-  for (var i = 0; i < fieldsetForm.length; i++) {
-    fieldsetForm[i].disabled = false;
-  }
-  for (var i = 0; i < selectForm.length; i++) {
-    selectForm[i].disabled = false;
-  }
-  setupAddress(true);
-  setupRelatedTime();
 }
 
 
-var init = function () {
+var setupPageStatus = function (active) {
+  var fieldsetForm = document.querySelectorAll('fieldset');
+  var selectForm = document.querySelectorAll('select');
+  var cityMap = document.querySelector('.map');
 
-  setupPageInactive(false);
+  if (active) {
+    cityMap.classList.remove('map--faded');
+    adForm.classList.remove('ad-form--disabled');
+    setupElementStatus(true, fieldsetForm)
+    setupElementStatus(true, selectForm)
+    setupAddress(true);
+    setupRelatedTime();
+
+  } else {
+
+    setupElementStatus(false, fieldsetForm)
+    setupElementStatus(false, selectForm)
+    setupAddress(false)
+
+  }
+};
+
+var init = function () {
+  setupPageStatus(false)
 
   mapPin.addEventListener('mousedown', function (evt) {
     if (evt.button == 0) {
-      setupPageActive();
+      setupPageStatus(true)
     }
   });
 
   mapPin.addEventListener('keydown', function (evt) {
     if (evt.code == 'Enter') {
-      setupPageActive();
+      setupPageStatus(true)
     }
   });
 }
@@ -173,6 +180,7 @@ init();
 var title = document.querySelector('#title')
 
 title.addEventListener('invalid', function () {
+  console.log('invalid - title')
   if (title.validity.tooShort) {
     title.setCustomValidity('Заголовок объявления должен состоять минимум из 30 символов');
   } else if (title.validity.tooLong) {
@@ -186,9 +194,9 @@ title.addEventListener('invalid', function () {
 
 
 var price = document.querySelector('#price')
-var typeHouse = document.querySelector('#type')
 
-price.addEventListener('invalid', function () {
+var setPrice = function () {
+  var typeHouse = document.querySelector('#type')
   if (typeHouse.value == 'flat' && price.value < 1000) {
     price.setCustomValidity('Для квартиры минимальная цена за ночь 1 000!')
   } else if (typeHouse.value == 'house' && price.value < 5000) {
@@ -198,29 +206,86 @@ price.addEventListener('invalid', function () {
   } else {
     price.setCustomValidity('');
   }
+}
+
+price.addEventListener('invalid', function () {
+  setPrice();
 });
 
 
 
+
+//
+// // capacity.addEventListener('change', function () {
+// //   capacityCheck()
+// // })
+// //
+// // roomCount.addEventListener('change', function () {
+// //   capacityCheck()
+// // })
+//
+
 var capacity = document.querySelector('#capacity')
 var roomCount= document.querySelector('#room_number')
 
-capacity.addEventListener('invalid', function () {
-  if (roomCount.value == 1 && capacity.value != 1 ) {
+var setCapacity = function () {
+  var capVal = capacity.options[capacity.selectedIndex].value
+  var roomVal = roomCount.options[roomCount.selectedIndex].value
+  if (roomVal == 1 && capVal != 1 ) {
     capacity.setCustomValidity('Для одной комнаты - один гость!')
-  } else if (roomCount.value == 2 && capacity.value != 1 && capacity.value != 2) {
+  } else if (roomVal == 2 && capVal != 1 && capVal != 2) {
     capacity.setCustomValidity('Для двух комнат - один или два гостя!')
-  } else if (roomCount.value == 3 && capacity.value == 0)  {
+  } else if (roomVal == 3 && capVal == 0)  {
     capacity.setCustomValidity('Для трех комнат - нельзя выбрать - Не для гостей')
-  } else if (roomCount.value == 100 && capacity.value != 0) {
+  } else if (roomVal == 100 && capVal != 0) {
     capacity.setCustomValidity('Только возможно для не гостей!');
   } else {
     capacity.setCustomValidity('');
   }
+}
+
+var setRoomCount = function () {
+  var capVal = capacity.options[capacity.selectedIndex].value
+  var roomVal = roomCount.options[roomCount.selectedIndex].value
+  if (roomVal == 1 && capVal != 1 ) {
+    roomCount.setCustomValidity('Для одной комнаты - один гость!')
+  } else if (roomVal == 2 && capVal != 1 && capVal != 2) {
+    roomCount.setCustomValidity('Для двух комнат - один или два гостя!')
+  } else if (roomVal == 3 && capVal == 0)  {
+    roomCount.setCustomValidity('Для трех комнат - нельзя выбрать - Не для гостей')
+  } else if (roomVal == 100 && capVal != 0) {
+    roomCount.setCustomValidity('Только возможно для не гостей!');
+  } else {
+    roomCount.setCustomValidity('');
+  }
+}
+
+capacity.addEventListener('input', function () {
+  setCapacity();
 })
 
-
-
+//
+//
+// // var capacityCheck = function (capval, roomval) {
+// //   var capval = capacity.options[capacity.selectedIndex].value
+// //   var roomval = roomCount.options[roomCount.selectedIndex].value
+// //   capacity.addEventListener('invalid', function () {
+// //     console.log('invalid start')
+// //     if (roomval == 1 && capval != 1) {
+// //       capacity.setCustomValidity('Для одной комнаты - один гость!')
+// //     } else if (roomval == 2 && capval != 1 && capval != 2) {
+// //       capacity.setCustomValidity('Для двух комнат - один или два гостя!')
+// //     } else if (roomval == 3 && capval == 0) {
+// //       capacity.setCustomValidity('Для трех комнат - нельзя выбрать - Не для гостей')
+// //     } else if (roomval == 100 && capval != 0) {
+// //       capacity.setCustomValidity('Только возможно для не гостей!');
+// //     } else {
+// //       capacity.setCustomValidity('');
+// //     }
+// //   })
+// // }
+// capacity.reportValidity()
+//
 adForm.addEventListener('submit', function (evt) {
   evt.preventDefault()
 })
