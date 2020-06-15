@@ -213,6 +213,10 @@ price.addEventListener('invalid', function () {
 });
 
 
+
+//Не работает invalid на capacity
+
+
 var capacity = document.querySelector('#capacity')
 var roomCount= document.querySelector('#room_number')
 
