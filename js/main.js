@@ -213,18 +213,6 @@ price.addEventListener('invalid', function () {
 });
 
 
-
-
-//
-// // capacity.addEventListener('change', function () {
-// //   capacityCheck()
-// // })
-// //
-// // roomCount.addEventListener('change', function () {
-// //   capacityCheck()
-// // })
-//
-
 var capacity = document.querySelector('#capacity')
 var roomCount= document.querySelector('#room_number')
 
@@ -244,23 +232,7 @@ var setCapacity = function () {
   }
 }
 
-var setRoomCount = function () {
-  var capVal = capacity.options[capacity.selectedIndex].value
-  var roomVal = roomCount.options[roomCount.selectedIndex].value
-  if (roomVal == 1 && capVal != 1 ) {
-    roomCount.setCustomValidity('Для одной комнаты - один гость!')
-  } else if (roomVal == 2 && capVal != 1 && capVal != 2) {
-    roomCount.setCustomValidity('Для двух комнат - один или два гостя!')
-  } else if (roomVal == 3 && capVal == 0)  {
-    roomCount.setCustomValidity('Для трех комнат - нельзя выбрать - Не для гостей')
-  } else if (roomVal == 100 && capVal != 0) {
-    roomCount.setCustomValidity('Только возможно для не гостей!');
-  } else {
-    roomCount.setCustomValidity('');
-  }
-}
-
-capacity.addEventListener('input', function () {
+capacity.addEventListener('invalid', function () {
   setCapacity();
 })
 
@@ -286,6 +258,7 @@ capacity.addEventListener('input', function () {
 // // }
 // capacity.reportValidity()
 //
+
 adForm.addEventListener('submit', function (evt) {
   evt.preventDefault()
 })
