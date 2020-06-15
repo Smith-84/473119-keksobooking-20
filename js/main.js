@@ -2,7 +2,6 @@
 
 var ADS_COUNT = 8;
 var mapPin = document.querySelector('.map__pin--main');
-var adForm = document.querySelector('.ad-form');
 
 var getRandomInt = function (min, max) {
   min = Math.ceil(min);
@@ -88,99 +87,83 @@ var renderNewAds = function (map, adsData) {
   map.appendChild(fragment);
 };
 
-// var init = function () {
-//   // var cityMap = document.querySelector('.map');
-//   // var cityMapAds = document.querySelector('.map__pins');
-//   // var adsData = createAdsData();
-//
-//   // renderNewAds(cityMapAds, adsData);
-// };
 
 var setupAddress = function (activePageFlag) {
-  var address = document.querySelector('#address')
-  var MAP_PIN_WIDTH = 65;
-  var MAP_PIN_HEIGHT = 65;
+  var address = document.querySelector('#address');
+  var mapPinWidth = 65;
+  var mapPinHeight = 65;
+  var newWidth = Math.round((mapPin.offsetLeft + mapPinWidth / 2));
   if (activePageFlag) {
-    address.value = (mapPin.offsetLeft + MAP_PIN_WIDTH / 2) + ',' + (MAP_PIN_HEIGHT + mapPin.offsetTop + 10)
+    address.value = newWidth + ',' + (mapPinHeight + mapPin.offsetTop + 10);
   } else {
-    address.value = (mapPin.offsetLeft + MAP_PIN_WIDTH / 2) + ',' + (MAP_PIN_HEIGHT / 2 + mapPin.offsetTop)
-  }
-}
-
-
-var setupRelatedTime = function () {
-  var timeForm = document.querySelector('.ad-form__element--time')
-  var timeIn = document.querySelector('#timein')
-  var timeOut = document.querySelector('#timeout')
-
-  timeForm.addEventListener('change', function (evt) {
-    if (evt.target == timeIn) {
-      timeOut.value = evt.target.value
-    } else {
-      timeIn.value = evt.target.value
-    }
-  })
-}
-
-
-var setupElementStatus = function (disabledStatus, elements) {
-  if (disabledStatus) {
-    for (var i = 0; i < elements.length; i++) {
-      elements[i].disabled = false;
-    }
-  } else {
-    for (var i = 0; i < elements.length; i++) {
-      elements[i].disabled = true;
-    }
-  }
-}
-
-
-var setupPageStatus = function (active) {
-  var fieldsetForm = document.querySelectorAll('fieldset');
-  var selectForm = document.querySelectorAll('select');
-  var cityMap = document.querySelector('.map');
-
-  if (active) {
-    cityMap.classList.remove('map--faded');
-    adForm.classList.remove('ad-form--disabled');
-    setupElementStatus(true, fieldsetForm)
-    setupElementStatus(true, selectForm)
-    setupAddress(true);
-    setupRelatedTime();
-
-  } else {
-
-    setupElementStatus(false, fieldsetForm)
-    setupElementStatus(false, selectForm)
-    setupAddress(false)
-
+    var newHeight = Math.round(mapPinHeight / 2);
+    address.value = newWidth + ',' + (newHeight + mapPin.offsetTop);
   }
 };
 
-var init = function () {
-  setupPageStatus(false)
 
-  mapPin.addEventListener('mousedown', function (evt) {
-    if (evt.button == 0) {
-      setupPageStatus(true)
+var setupRelatedTime = function () {
+  var timeForm = document.querySelector('.ad-form__element--time');
+  var timeIn = document.querySelector('#timein');
+  var timeOut = document.querySelector('#timeout');
+
+  timeForm.addEventListener('change', function (evt) {
+    if (evt.target === timeIn) {
+      timeOut.value = evt.target.value;
+    } else {
+      timeIn.value = evt.target.value;
     }
   });
-
-  mapPin.addEventListener('keydown', function (evt) {
-    if (evt.code == 'Enter') {
-      setupPageStatus(true)
-    }
-  });
-}
-
-init();
+};
 
 
-var title = document.querySelector('#title')
+var elementsHandler = function (elements, status) {
+  for (var i = 0; i < elements.length; i++) {
+    elements[i].disabled = status;
+  }
+};
 
-title.addEventListener('invalid', function () {
-  console.log('invalid - title')
+var setupFormElementStatus = function (status) {
+  var fieldSetForm = document.querySelectorAll('fieldset');
+  var selectForm = document.querySelectorAll('select');
+  elementsHandler(fieldSetForm, status);
+  elementsHandler(selectForm, status);
+};
+
+
+var getValidateCapacity = function (capacity, roomCount) {
+  var capVal = capacity.options[capacity.selectedIndex].value;
+  var roomVal = roomCount.options[roomCount.selectedIndex].value;
+  if (roomVal === '1' && capVal !== '1') {
+    capacity.setCustomValidity('Для одной комнаты - один гость!');
+  } else if (roomVal === '2' && capVal !== '1' && capVal !== '2') {
+    capacity.setCustomValidity('Для двух комнат - один или два гостя!');
+  } else if (roomVal === '3' && capVal === '0') {
+    capacity.setCustomValidity('Для трех комнат - нельзя выбрать - Не для гостей');
+  } else if (roomVal === '100' && capVal !== '0') {
+    capacity.setCustomValidity('Только возможно для не гостей!');
+  } else {
+    capacity.setCustomValidity('');
+  }
+};
+
+var getValidatePrice = function (typeHouse, price) {
+  if (typeHouse.value === 'flat' && price.value < 1000) {
+    price.setCustomValidity('Для квартиры минимальная цена за ночь 1 000!');
+  } else if (typeHouse.value === 'house' && price.value < 5000) {
+    price.setCustomValidity('Для дома минимальная цена 5 000!');
+  } else if (typeHouse.value === 'palace' && price.value < 10000) {
+    price.setCustomValidity('Для дворца минимальная цена 10 000.');
+  } else if (price.validity.valueMissing) {
+    price.setCustomValidity('Укажите стоимость!');
+  } else if (price.validity.rangeOverflow) {
+    price.setCustomValidity('Превышена стоимость!');
+  } else {
+    price.setCustomValidity('');
+  }
+};
+
+var getValidateTitle = function (title) {
   if (title.validity.tooShort) {
     title.setCustomValidity('Заголовок объявления должен состоять минимум из 30 символов');
   } else if (title.validity.tooLong) {
@@ -190,79 +173,87 @@ title.addEventListener('invalid', function () {
   } else {
     title.setCustomValidity('');
   }
-});
+};
 
-
-var price = document.querySelector('#price')
-
-var setPrice = function () {
-  var typeHouse = document.querySelector('#type')
-  if (typeHouse.value == 'flat' && price.value < 1000) {
-    price.setCustomValidity('Для квартиры минимальная цена за ночь 1 000!')
-  } else if (typeHouse.value == 'house' && price.value < 5000) {
-    price.setCustomValidity('Для дома минимальная цена 5 000!')
-  } else if (typeHouse.value == 'palace' && price.value < 10000) {
-    price.setCustomValidity('Для дворца минимальная цена 10 000.')
+var setPriceMinValue = function (typeHouse, price) {
+  if (typeHouse.value === 'flat') {
+    price.min = 1000;
+  } else if (typeHouse.value === 'house') {
+    price.min = 5000;
+  } else if (typeHouse.value === 'palace' && price.value < 10000) {
+    price.min = 10000;
   } else {
-    price.setCustomValidity('');
+    price.min = 0;
   }
-}
+};
 
-price.addEventListener('invalid', function () {
-  setPrice();
-});
+var setupPageActive = function () {
+  var adForm = document.querySelector('.ad-form');
+  var cityMap = document.querySelector('.map');
+  var cityMapAds = document.querySelector('.map__pins');
+  var title = document.querySelector('#title');
+  var capacity = document.querySelector('#capacity');
+  var roomCount = document.querySelector('#room_number');
+  var typeHouse = document.querySelector('#type');
+  var price = document.querySelector('#price');
+
+  cityMap.classList.remove('map--faded');
+  adForm.classList.remove('ad-form--disabled');
+
+  var adsData = createAdsData();
+
+  renderNewAds(cityMapAds, adsData);
+
+  setupFormElementStatus(false);
+
+  setupAddress(true);
+
+  setupRelatedTime();
+
+  title.addEventListener('invalid', function () {
+    getValidateTitle(title);
+  });
+
+  price.addEventListener('invalid', function () {
+    getValidatePrice(typeHouse, price);
+  });
+
+  typeHouse.addEventListener('change', function () {
+    setPriceMinValue(typeHouse, price);
+  });
+
+  capacity.addEventListener('change', function () {
+    getValidateCapacity(capacity, roomCount);
+  });
+
+  roomCount.addEventListener('change', function () {
+    getValidateCapacity(capacity, roomCount);
+  });
+
+};
+
+var setupPageInactive = function () {
+  setupFormElementStatus(true);
+  setupAddress(false);
+};
 
 
-
-//Не работает invalid на capacity
-
-
-var capacity = document.querySelector('#capacity')
-var roomCount= document.querySelector('#room_number')
-
-var setCapacity = function () {
-  var capVal = capacity.options[capacity.selectedIndex].value
-  var roomVal = roomCount.options[roomCount.selectedIndex].value
-  if (roomVal == 1 && capVal != 1 ) {
-    capacity.setCustomValidity('Для одной комнаты - один гость!')
-  } else if (roomVal == 2 && capVal != 1 && capVal != 2) {
-    capacity.setCustomValidity('Для двух комнат - один или два гостя!')
-  } else if (roomVal == 3 && capVal == 0)  {
-    capacity.setCustomValidity('Для трех комнат - нельзя выбрать - Не для гостей')
-  } else if (roomVal == 100 && capVal != 0) {
-    capacity.setCustomValidity('Только возможно для не гостей!');
-  } else {
-    capacity.setCustomValidity('');
+var buttonMouseDownHandler = function (evt) {
+  if (evt.button === 0) {
+    setupPageActive();
   }
-}
+};
 
-capacity.addEventListener('invalid', function () {
-  setCapacity();
-})
+var buttonKeyDownHandler = function (evt) {
+  if (evt.code === 'Enter') {
+    setupPageActive();
+  }
+};
 
-//
-//
-// // var capacityCheck = function (capval, roomval) {
-// //   var capval = capacity.options[capacity.selectedIndex].value
-// //   var roomval = roomCount.options[roomCount.selectedIndex].value
-// //   capacity.addEventListener('invalid', function () {
-// //     console.log('invalid start')
-// //     if (roomval == 1 && capval != 1) {
-// //       capacity.setCustomValidity('Для одной комнаты - один гость!')
-// //     } else if (roomval == 2 && capval != 1 && capval != 2) {
-// //       capacity.setCustomValidity('Для двух комнат - один или два гостя!')
-// //     } else if (roomval == 3 && capval == 0) {
-// //       capacity.setCustomValidity('Для трех комнат - нельзя выбрать - Не для гостей')
-// //     } else if (roomval == 100 && capval != 0) {
-// //       capacity.setCustomValidity('Только возможно для не гостей!');
-// //     } else {
-// //       capacity.setCustomValidity('');
-// //     }
-// //   })
-// // }
-// capacity.reportValidity()
-//
+var init = function () {
+  setupPageInactive();
+  mapPin.addEventListener('mousedown', buttonMouseDownHandler);
+  mapPin.addEventListener('keydown', buttonKeyDownHandler);
+};
 
-adForm.addEventListener('submit', function (evt) {
-  evt.preventDefault()
-})
+init();
