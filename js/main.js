@@ -51,7 +51,7 @@ var createAdData = function (numberAd) {
     'guests': getRandomInt(1, maxGuests),
     'checkin': availableTimes[getRandomInt(0, availableTimes.length - 1)],
     'checkout': availableTimes[getRandomInt(0, availableTimes.length - 1)],
-    'features': typeFeatures[getRandomInt(0, typeFeatures.length - 1)],
+    'features': typeFeatures.slice(getRandomInt(0, 2), getRandomInt(3, typeFeatures.length - 1)),
     'description': '',
     'photos': getPhotos()
   };
@@ -78,30 +78,72 @@ var createMapPin = function (ad) {
 };
 
 var createCard = function (ad) {
-  var templateCard= document.querySelector('#card').content.querySelector('.map__card');
+  var templateCard = document.querySelector('#card').content.querySelector('.map__card');
   var newCardBlock = templateCard.cloneNode(true);
 
-  var popupTitle = newCardBlock.querySelector('.popup__title')
-  popupTitle.textContent = ad.offer.title
-  var popupAddress = newCardBlock.querySelector('.popup__text--address')
-  popupAddress.textContent = ad.offer.address
-  var popupPrice =newCardBlock.querySelector('.popup__text--price')
-  popupPrice.textContent = ad.offer.price + '₽/ночь.'
-  var popupType = newCardBlock.querySelector('.popup__type')
-  popupType.textContent = ad.offer.type
-  var popupCapacity = newCardBlock.querySelector('.popup__text--capacity')
-  popupCapacity.textContent = ad.offer.rooms + ' комнаты для ' + ad.offer.guests + ' гостей'
-  var popupTime = newCardBlock.querySelector('.popup__text--time')
-  popupTime.textContent = 'Заезд после ' + ad.offer.checkin + 'выезд до ' + ad.offer.checkout
-  var popupFeatures =newCardBlock.querySelector(' .popup__features')
-  popupFeatures.textContent = ad.offer.features
-  var popupDesc = newCardBlock.querySelector('.popup__description')
-  popupDesc.textContent = ad.offer.description
-  var popupPhotos = newCardBlock.querySelector('.popup__photos')
-  var popupAvatar = newCardBlock.querySelector('.popup__avatar')
-  popupAvatar.src = ad.author.avatar
+  var namesTypeHouses = {
+    'flat': 'Квартира',
+    'bungalo': 'Бунгало',
+    'house': 'Дом',
+    'palace': 'Дворец'
+  };
 
-  return newCardBlock
+  var popupTitle = newCardBlock.querySelector('.popup__title');
+  popupTitle.textContent = ad.offer.title;
+
+  var popupAddress = newCardBlock.querySelector('.popup__text--address');
+  popupAddress.textContent = ad.offer.address;
+
+  var popupPrice = newCardBlock.querySelector('.popup__text--price');
+  popupPrice.textContent = ad.offer.price + '₽/ночь.';
+
+  var popupType = newCardBlock.querySelector('.popup__type');
+  popupType.textContent = namesTypeHouses[ad.offer.type];
+
+  var popupCapacity = newCardBlock.querySelector('.popup__text--capacity');
+  popupCapacity.textContent = ad.offer.rooms + ' комнаты для ' + ad.offer.guests + ' гостей';
+
+  var popupTime = newCardBlock.querySelector('.popup__text--time');
+  popupTime.textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout;
+
+  var popupFeatures = newCardBlock.querySelector('.popup__features');
+
+  var featuresSetup = function () {
+    var fragment = document.createDocumentFragment();
+
+    while (popupFeatures.firstChild) {
+      popupFeatures.removeChild(popupFeatures.firstChild);
+    }
+
+    for (var i = 0; i < ad.offer.features.length; i++) {
+      var features = document.createElement('li');
+      features.className = 'popup__feature popup__feature--' + ad.offer.features[i];
+      fragment.appendChild(features);
+    }
+    return fragment;
+  };
+
+  popupFeatures.appendChild(featuresSetup());
+
+  var popupDesc = newCardBlock.querySelector('.popup__description');
+  popupDesc.textContent = ad.offer.description;
+
+  var popupPhotos = newCardBlock.querySelector('.popup__photos');
+  var photo = popupPhotos.querySelector('img');
+  photo.src = ad.offer.photos[0];
+
+  if (ad.offer.photos.length > 1) {
+    for (var i = 1; i < ad.offer.photos.length; i++) {
+      var newPhoto = photo.cloneNode();
+      newPhoto.src = ad.offer.photos[i];
+      popupPhotos.appendChild(newPhoto);
+    }
+  }
+
+  var popupAvatar = newCardBlock.querySelector('.popup__avatar');
+  popupAvatar.src = ad.author.avatar;
+
+  return newCardBlock;
 };
 
 var renderNewElements = function (adsData, func) {
@@ -110,7 +152,7 @@ var renderNewElements = function (adsData, func) {
     var newElement = func(adsData[i]);
     fragment.appendChild(newElement);
   }
-  return fragment
+  return fragment;
 };
 
 var init = function () {
