@@ -130,8 +130,8 @@ var createCard = function (ad) {
   if (ad.offer.photos.length > 1) {
     for (var i = 1; i < ad.offer.photos.length; i++) {
       var newPhoto = photo.cloneNode();
-      newPhoto.src = ad.offer.photos[i]
-      popupPhotos.appendChild(newPhoto)
+      newPhoto.src = ad.offer.photos[i];
+      popupPhotos.appendChild(newPhoto);
     }
   }
 
