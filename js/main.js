@@ -88,12 +88,12 @@ var renderNewAds = function (map, adsData) {
 };
 
 
-var setupAddress = function (activePageFlag) {
+var setupAddress = function (status) {
   var address = document.querySelector('#address');
   var mapPinWidth = 65;
   var mapPinHeight = 65;
   var newWidth = Math.round((mapPin.offsetLeft + mapPinWidth / 2));
-  if (activePageFlag) {
+  if (status.activePage) {
     address.value = newWidth + ',' + (mapPinHeight + mapPin.offsetTop + 10);
   } else {
     var newHeight = Math.round(mapPinHeight / 2);
@@ -102,36 +102,21 @@ var setupAddress = function (activePageFlag) {
 };
 
 
-var setupRelatedTime = function () {
-  var timeForm = document.querySelector('.ad-form__element--time');
-  var timeIn = document.querySelector('#timein');
-  var timeOut = document.querySelector('#timeout');
-
-  timeForm.addEventListener('change', function (evt) {
-    if (evt.target === timeIn) {
-      timeOut.value = evt.target.value;
-    } else {
-      timeIn.value = evt.target.value;
-    }
-  });
-};
-
-
-var elementsHandler = function (elements, status) {
+var elementsHandler = function (elements, disabled) {
   for (var i = 0; i < elements.length; i++) {
-    elements[i].disabled = status;
+    elements[i].disabled = disabled;
   }
 };
 
 var setupFormElementStatus = function (status) {
   var fieldSetForm = document.querySelectorAll('fieldset');
   var selectForm = document.querySelectorAll('select');
-  elementsHandler(fieldSetForm, status);
-  elementsHandler(selectForm, status);
+  elementsHandler(fieldSetForm, status.disabled);
+  elementsHandler(selectForm, status.disabled);
 };
 
 
-var getValidateCapacity = function (capacity, roomCount) {
+var setupValidityCapacity = function (capacity, roomCount) {
   var capVal = capacity.options[capacity.selectedIndex].value;
   var roomVal = roomCount.options[roomCount.selectedIndex].value;
   if (roomVal === '1' && capVal !== '1') {
@@ -149,41 +134,40 @@ var getValidateCapacity = function (capacity, roomCount) {
 
 var getValidatePrice = function (typeHouse, price) {
   if (typeHouse.value === 'flat' && price.value < 1000) {
-    price.setCustomValidity('Для квартиры минимальная цена за ночь 1 000!');
+    return 'Для квартиры минимальная цена за ночь 1 000!'
   } else if (typeHouse.value === 'house' && price.value < 5000) {
-    price.setCustomValidity('Для дома минимальная цена 5 000!');
+    return 'Для дома минимальная цена 5 000!'
   } else if (typeHouse.value === 'palace' && price.value < 10000) {
-    price.setCustomValidity('Для дворца минимальная цена 10 000.');
-  } else if (price.validity.valueMissing) {
-    price.setCustomValidity('Укажите стоимость!');
-  } else if (price.validity.rangeOverflow) {
-    price.setCustomValidity('Превышена стоимость!');
+    return 'Для дворца минимальная цена 10 000.'
   } else {
-    price.setCustomValidity('');
+    return '';
   }
 };
 
 var getValidateTitle = function (title) {
   if (title.validity.tooShort) {
-    title.setCustomValidity('Заголовок объявления должен состоять минимум из 30 символов');
+    return 'Заголовок объявления должен состоять минимум из 30 символов';
   } else if (title.validity.tooLong) {
-    title.setCustomValidity('Заголовок объявления не должен превышать 100 символов');
-  } else if (title.validity.valueMissing) {
-    title.setCustomValidity('Обязательное поле');
+    return 'Заголовок объявления не должен превышать 100 символов';
   } else {
-    title.setCustomValidity('');
+    return '';
   }
 };
 
-var setPriceMinValue = function (typeHouse, price) {
-  if (typeHouse.value === 'flat') {
-    price.min = 1000;
-  } else if (typeHouse.value === 'house') {
-    price.min = 5000;
-  } else if (typeHouse.value === 'palace' && price.value < 10000) {
-    price.min = 10000;
-  } else {
-    price.min = 0;
+
+var setupPriceMinValue = function (typeHouse, price) {
+  switch (typeHouse.value) {
+    case 'flat':
+      price.min = 1000;
+      break;
+    case 'house':
+      price.min = 5000;
+      break;
+    case 'palace':
+      price.min = 10000;
+      break;
+    default:
+      price.min = 0;
   }
 };
 
@@ -196,6 +180,9 @@ var setupPageActive = function () {
   var roomCount = document.querySelector('#room_number');
   var typeHouse = document.querySelector('#type');
   var price = document.querySelector('#price');
+  var timeForm = document.querySelector('.ad-form__element--time');
+  var timeIn = document.querySelector('#timein');
+  var timeOut = document.querySelector('#timeout');
 
   cityMap.classList.remove('map--faded');
   adForm.classList.remove('ad-form--disabled');
@@ -204,37 +191,44 @@ var setupPageActive = function () {
 
   renderNewAds(cityMapAds, adsData);
 
-  setupFormElementStatus(false);
+  setupFormElementStatus({disabled: false});
 
-  setupAddress(true);
+  setupAddress({activePage: true});
 
-  setupRelatedTime();
-
-  title.addEventListener('invalid', function () {
-    getValidateTitle(title);
+  timeForm.addEventListener('change', function (evt) {
+    if (evt.target === timeIn) {
+      timeOut.value = evt.target.value;
+    } else {
+      timeIn.value = evt.target.value;
+    }
   });
 
-  price.addEventListener('invalid', function () {
-    getValidatePrice(typeHouse, price);
+  title.addEventListener('input', function () {
+    this.setCustomValidity(getValidateTitle(title));
+  });
+
+  price.addEventListener('input', function () {
+    this.setCustomValidity(getValidatePrice(typeHouse, price));
   });
 
   typeHouse.addEventListener('change', function () {
-    setPriceMinValue(typeHouse, price);
+    setupPriceMinValue(typeHouse, price);
+    price.setCustomValidity(getValidatePrice(typeHouse, price));
   });
 
   capacity.addEventListener('change', function () {
-    getValidateCapacity(capacity, roomCount);
+    setupValidityCapacity(capacity, roomCount);
   });
 
   roomCount.addEventListener('change', function () {
-    getValidateCapacity(capacity, roomCount);
+    setupValidityCapacity(capacity, roomCount);
   });
 
 };
 
 var setupPageInactive = function () {
-  setupFormElementStatus(true);
-  setupAddress(false);
+  setupFormElementStatus({disabled: true});
+  setupAddress({activePage: false});
 };
 
 
