@@ -80,7 +80,17 @@ var createMapPin = function (ad) {
 var createCard = function (ad) {
   var templateCard = document.querySelector('#card').content.querySelector('.map__card');
   var newCardBlock = templateCard.cloneNode(true);
-
+  var popupAvatar = newCardBlock.querySelector('.popup__avatar');
+  var popupTitle = newCardBlock.querySelector('.popup__title');
+  var popupAddress = newCardBlock.querySelector('.popup__text--address');
+  var popupPrice = newCardBlock.querySelector('.popup__text--price');
+  var popupType = newCardBlock.querySelector('.popup__type');
+  var popupCapacity = newCardBlock.querySelector('.popup__text--capacity');
+  var popupTime = newCardBlock.querySelector('.popup__text--time');
+  var popupFeatures = newCardBlock.querySelector('.popup__features');
+  var popupDesc = newCardBlock.querySelector('.popup__description');
+  var popupPhotos = newCardBlock.querySelector('.popup__photos');
+  var photo = popupPhotos.querySelector('img');
   var namesTypeHouses = {
     'flat': 'Квартира',
     'bungalo': 'Бунгало',
@@ -88,33 +98,9 @@ var createCard = function (ad) {
     'palace': 'Дворец'
   };
 
-  var popupTitle = newCardBlock.querySelector('.popup__title');
-  popupTitle.textContent = ad.offer.title;
-
-  var popupAddress = newCardBlock.querySelector('.popup__text--address');
-  popupAddress.textContent = ad.offer.address;
-
-  var popupPrice = newCardBlock.querySelector('.popup__text--price');
-  popupPrice.textContent = ad.offer.price + '₽/ночь.';
-
-  var popupType = newCardBlock.querySelector('.popup__type');
-  popupType.textContent = namesTypeHouses[ad.offer.type];
-
-  var popupCapacity = newCardBlock.querySelector('.popup__text--capacity');
-  popupCapacity.textContent = ad.offer.rooms + ' комнаты для ' + ad.offer.guests + ' гостей';
-
-  var popupTime = newCardBlock.querySelector('.popup__text--time');
-  popupTime.textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout;
-
-  var popupFeatures = newCardBlock.querySelector('.popup__features');
-
   var featuresSetup = function () {
     var fragment = document.createDocumentFragment();
-
-    while (popupFeatures.firstChild) {
-      popupFeatures.removeChild(popupFeatures.firstChild);
-    }
-
+    popupFeatures.innerHTML = '';
     for (var i = 0; i < ad.offer.features.length; i++) {
       var features = document.createElement('li');
       features.className = 'popup__feature popup__feature--' + ad.offer.features[i];
@@ -123,24 +109,30 @@ var createCard = function (ad) {
     return fragment;
   };
 
+  popupTitle.textContent = ad.offer.title;
+  popupAddress.textContent = ad.offer.address;
+  popupPrice.textContent = ad.offer.price + '₽/ночь.';
+  popupType.textContent = namesTypeHouses[ad.offer.type];
+  popupCapacity.textContent = ad.offer.rooms + ' комнаты для ' + ad.offer.guests + ' гостей';
+  popupTime.textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout;
   popupFeatures.appendChild(featuresSetup());
-
-  var popupDesc = newCardBlock.querySelector('.popup__description');
   popupDesc.textContent = ad.offer.description;
 
-  var popupPhotos = newCardBlock.querySelector('.popup__photos');
-  var photo = popupPhotos.querySelector('img');
-  photo.src = ad.offer.photos[0];
-
-  if (ad.offer.photos.length > 1) {
-    for (var i = 1; i < ad.offer.photos.length; i++) {
-      var newPhoto = photo.cloneNode();
+  var photosSetup = function () {
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < ad.offer.photos.length; i++) {
+      var newPhoto = document.createElement('img');
+      newPhoto.classList.add(photo.classList);
       newPhoto.src = ad.offer.photos[i];
-      popupPhotos.appendChild(newPhoto);
+      newPhoto.alt = photo.alt;
+      newPhoto.width = photo.width;
+      newPhoto.height = photo.height;
+      fragment.appendChild(newPhoto);
     }
-  }
+    return fragment;
+  };
 
-  var popupAvatar = newCardBlock.querySelector('.popup__avatar');
+  photo.replaceWith(photosSetup());
   popupAvatar.src = ad.author.avatar;
 
   return newCardBlock;
