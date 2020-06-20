@@ -200,23 +200,25 @@ var setupValidityCapacity = function (capacity, roomCount) {
 };
 
 var getValidatePrice = function (typeHouse, price) {
-  if (typeHouse.value === 'flat' && price.value < 1000)
+  if (typeHouse.value === 'flat' && price.value < 1000) {
     return 'Для квартиры минимальная цена за ночь 1 000!';
-  if (typeHouse.value === 'house' && price.value < 5000)
+  } else if (typeHouse.value === 'house' && price.value < 5000) {
     return 'Для дома минимальная цена 5 000!';
-  if (typeHouse.value === 'palace' && price.value < 10000)
+  } else if (typeHouse.value === 'palace' && price.value < 10000) {
     return 'Для дворца минимальная цена 10 000.';
-
-  return '';
+  } else {
+    return '';
+  }
 };
 
 var getValidateTitle = function (title) {
-  if (title.validity.tooShort)
+  if (title.validity.tooShort) {
     return 'Заголовок объявления должен состоять минимум из 30 символов';
-  if (title.validity.tooLong)
+  } else if (title.validity.tooLong) {
     return 'Заголовок объявления не должен превышать 100 символов';
-
-  return '';
+  } else {
+    return '';
+  }
 };
 
 var setupPageInactive = function () {
