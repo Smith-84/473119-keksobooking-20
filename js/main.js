@@ -1,6 +1,7 @@
 'use strict';
 
 var ADS_COUNT = 8;
+var mapPin = document.querySelector('.map__pin--main');
 
 var getRandomInt = function (min, max) {
   min = Math.ceil(min);
@@ -60,20 +61,6 @@ var createAdData = function (numberAd) {
     'offer': offer,
     'location': mapLocation,
   };
-};
-
-
-var createMapPin = function (ad) {
-  var pinWidth = 50;
-  var pinHeight = 70;
-  var templateAds = document.querySelector('#pin').content.querySelector('.map__pin');
-  var newAdsBlock = templateAds.cloneNode(true);
-  var image = newAdsBlock.querySelector('img');
-  newAdsBlock.style.left = String(ad.location.x - pinWidth / 2) + 'px';
-  newAdsBlock.style.top = String(ad.location.y - pinHeight) + 'px';
-  image.src = ad.author.avatar;
-  image.alt = ad.offer.title;
-  return newAdsBlock;
 };
 
 var createCard = function (ad) {
@@ -137,26 +124,228 @@ var createCard = function (ad) {
   return newCardBlock;
 };
 
-var renderNewElements = function (adsData, func) {
+var createMapPin = function (ad, dataNumber) {
+  var pinWidth = 50;
+  var pinHeight = 70;
+  var templateAds = document.querySelector('#pin').content.querySelector('.map__pin');
+  var newAdsBlock = templateAds.cloneNode(true);
+  var image = newAdsBlock.querySelector('img');
+  newAdsBlock.dataset.card = dataNumber;
+  newAdsBlock.style.left = String(ad.location.x - pinWidth / 2) + 'px';
+  newAdsBlock.style.top = String(ad.location.y - pinHeight) + 'px';
+  image.src = ad.author.avatar;
+  image.alt = ad.offer.title;
+  return newAdsBlock;
+};
+
+
+var renderNewAds = function (map, adsData) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < adsData.length; i++) {
-    var newElement = func(adsData[i]);
-    fragment.appendChild(newElement);
+    var newAdsElement = createMapPin(adsData[i], i);
+    fragment.appendChild(newAdsElement);
   }
-  return fragment;
+  map.appendChild(fragment);
+};
+
+var closeOpenedCardHandler = function (card) {
+  var btnClose = card.querySelector('.popup__close');
+  btnClose.addEventListener('click', function () {
+    card.remove();
+  });
+};
+
+var setupAddress = function (status) {
+  var address = document.querySelector('#address');
+  var mapPinWidth = 65;
+  var mapPinHeight = 65;
+  var newWidth = Math.round((mapPin.offsetLeft + mapPinWidth / 2));
+  if (status.activePage) {
+    address.value = newWidth + ',' + (mapPinHeight + mapPin.offsetTop + 10);
+  } else {
+    var newHeight = Math.round(mapPinHeight / 2);
+    address.value = newWidth + ',' + (newHeight + mapPin.offsetTop);
+  }
+};
+
+
+var elementsHandler = function (elements, disabled) {
+  for (var i = 0; i < elements.length; i++) {
+    elements[i].disabled = disabled;
+  }
+};
+
+var setupFormElementStatus = function (status) {
+  var fieldSetForm = document.querySelectorAll('fieldset');
+  var selectForm = document.querySelectorAll('select');
+  elementsHandler(fieldSetForm, status.disabled);
+  elementsHandler(selectForm, status.disabled);
+};
+
+
+var setupValidityCapacity = function (capacity, roomCount) {
+  var capVal = capacity.options[capacity.selectedIndex].value;
+  var roomVal = roomCount.options[roomCount.selectedIndex].value;
+  if (roomVal === '1' && capVal !== '1') {
+    capacity.setCustomValidity('Для одной комнаты - один гость!');
+  } else if (roomVal === '2' && capVal !== '1' && capVal !== '2') {
+    capacity.setCustomValidity('Для двух комнат - один или два гостя!');
+  } else if (roomVal === '3' && capVal === '0') {
+    capacity.setCustomValidity('Для трех комнат - нельзя выбрать - Не для гостей');
+  } else if (roomVal === '100' && capVal !== '0') {
+    capacity.setCustomValidity('Только возможно для не гостей!');
+  } else {
+    capacity.setCustomValidity('');
+  }
+};
+
+var getValidatePrice = function (typeHouse, price) {
+  if (typeHouse.value === 'flat' && price.value < 1000) {
+    return 'Для квартиры минимальная цена за ночь 1 000!';
+  } else if (typeHouse.value === 'house' && price.value < 5000) {
+    return 'Для дома минимальная цена 5 000!';
+  } else if (typeHouse.value === 'palace' && price.value < 10000) {
+    return 'Для дворца минимальная цена 10 000.';
+  } else {
+    return '';
+  }
+};
+
+var getValidateTitle = function (title) {
+  if (title.validity.tooShort) {
+    return 'Заголовок объявления должен состоять минимум из 30 символов';
+  } else if (title.validity.tooLong) {
+    return 'Заголовок объявления не должен превышать 100 символов';
+  } else {
+    return '';
+  }
+};
+
+var setupPageInactive = function () {
+  setupFormElementStatus({disabled: true});
+  setupAddress({activePage: false});
+};
+
+var setupPriceMinValue = function (typeHouse, price) {
+  switch (typeHouse.value) {
+    case 'flat':
+      price.min = 1000;
+      break;
+    case 'house':
+      price.min = 5000;
+      break;
+    case 'palace':
+      price.min = 10000;
+      break;
+    default:
+      price.min = 0;
+  }
+};
+
+var setupPageActive = function () {
+  var adForm = document.querySelector('.ad-form');
+  var cityMap = document.querySelector('.map');
+  var cityMapAds = document.querySelector('.map__pins');
+  var title = document.querySelector('#title');
+  var capacity = document.querySelector('#capacity');
+  var roomCount = document.querySelector('#room_number');
+  var typeHouse = document.querySelector('#type');
+  var price = document.querySelector('#price');
+  var timeForm = document.querySelector('.ad-form__element--time');
+  var timeIn = document.querySelector('#timein');
+  var timeOut = document.querySelector('#timeout');
+  var mapFilters = document.querySelector('.map__filters-container');
+  var openedCard;
+
+  cityMap.classList.remove('map--faded');
+  adForm.classList.remove('ad-form--disabled');
+
+  mapPin.removeEventListener('mousedown', buttonMouseDownHandler);
+  mapPin.removeEventListener('keydown', buttonKeyDownHandler);
+
+  var adsData = createAdsData();
+
+  renderNewAds(cityMapAds, adsData);
+
+  setupFormElementStatus({disabled: false});
+
+  setupAddress({activePage: true});
+
+  cityMapAds.addEventListener('click', function (evt) {
+    if (openedCard) {
+      openedCard.remove();
+    }
+    var newCard;
+    var buttonPin = evt.target.dataset.card;
+    var imgPin = evt.target.parentNode.dataset.card;
+
+    if (buttonPin) {
+      newCard = createCard(adsData[buttonPin]);
+    } else if (imgPin) {
+      newCard = createCard(adsData[imgPin]);
+    } else {
+      return;
+    }
+    openedCard = newCard;
+    closeOpenedCardHandler(newCard);
+    mapFilters.before(newCard);
+  });
+
+  cityMapAds.addEventListener('keydown', function (evt) {
+    if (evt.code === 'Escape') {
+      if (openedCard) {
+        openedCard.remove();
+      }
+    }
+  });
+
+  timeForm.addEventListener('change', function (evt) {
+    if (evt.target === timeIn) {
+      timeOut.value = evt.target.value;
+    } else {
+      timeIn.value = evt.target.value;
+    }
+  });
+
+  title.addEventListener('input', function () {
+    title.setCustomValidity(getValidateTitle(title));
+  });
+
+  price.addEventListener('input', function () {
+    price.setCustomValidity(getValidatePrice(typeHouse, price));
+  });
+
+  typeHouse.addEventListener('change', function () {
+    setupPriceMinValue(typeHouse, price);
+    price.setCustomValidity(getValidatePrice(typeHouse, price));
+  });
+
+  capacity.addEventListener('change', function () {
+    setupValidityCapacity(capacity, roomCount);
+  });
+
+  roomCount.addEventListener('change', function () {
+    setupValidityCapacity(capacity, roomCount);
+  });
+
+};
+
+var buttonMouseDownHandler = function (evt) {
+  if (evt.button === 0) {
+    setupPageActive();
+  }
+};
+
+var buttonKeyDownHandler = function (evt) {
+  if (evt.code === 'Enter') {
+    setupPageActive();
+  }
 };
 
 var init = function () {
-  var cityMap = document.querySelector('.map');
-  var cityMapAds = document.querySelector('.map__pins');
-  var mapFilters = document.querySelector('.map__filters-container');
-
-  var adsData = createAdsData();
-  cityMap.classList.remove('map--faded');
-
-  cityMapAds.appendChild(renderNewElements(adsData, createMapPin));
-  mapFilters.before(renderNewElements(adsData, createCard));
+  setupPageInactive();
+  mapPin.addEventListener('mousedown', buttonMouseDownHandler);
+  mapPin.addEventListener('keydown', buttonKeyDownHandler);
 };
-
 
 init();
