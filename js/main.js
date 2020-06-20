@@ -2,7 +2,6 @@
 
 var ADS_COUNT = 8;
 
-
 var getRandomInt = function (min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
