@@ -16,12 +16,12 @@
     var address = document.querySelector('#address');
     var mapPinWidth = 65;
     var mapPinHeight = 65;
-    var newWidth = Math.round((mapPin.offsetLeft + mapPinWidth / 2));
+    var newWidth = Math.round((window.mapPin.offsetLeft + mapPinWidth / 2));
     if (status.activePage) {
-      address.value = newWidth + ',' + (mapPinHeight + mapPin.offsetTop + 10);
+      address.value = newWidth + ',' + (mapPinHeight + window.mapPin.offsetTop + 10);
     } else {
       var newHeight = Math.round(mapPinHeight / 2);
-      address.value = newWidth + ',' + (newHeight + mapPin.offsetTop);
+      address.value = newWidth + ',' + (newHeight + window.mapPin.offsetTop);
     }
   };
 
@@ -38,7 +38,7 @@
     elementsHandler(selectForm, status.disabled);
   };
 
-  var setupValidityCapacity = function (capacity, roomCount) {
+  var setupValidityCapacity = function () {
     var capVal = capacity.options[capacity.selectedIndex].value;
     var roomVal = roomCount.options[roomCount.selectedIndex].value;
     if (roomVal === '1' && capVal !== '1') {
@@ -55,7 +55,7 @@
   };
 
 
-  var getValidatePrice = function (typeHouse, price) {
+  var getValidatePrice = function () {
     if (typeHouse.value === 'flat' && price.value < 1000) {
       return 'Для квартиры минимальная цена за ночь 1 000!';
     } else if (typeHouse.value === 'house' && price.value < 5000) {
@@ -67,7 +67,7 @@
     }
   };
 
-  var getValidateTitle = function (title) {
+  var getValidateTitle = function () {
     if (title.validity.tooShort) {
       return 'Заголовок объявления должен состоять минимум из 30 символов';
     } else if (title.validity.tooLong) {
@@ -77,7 +77,7 @@
     }
   };
 
-  var setupPriceMinValue = function (typeHouse, price) {
+  var setupPriceMinValue = function () {
     switch (typeHouse.value) {
       case 'flat':
         price.min = 1000;
@@ -106,35 +106,37 @@
     });
 
     title.addEventListener('input', function () {
-      title.setCustomValidity(getValidateTitle(title));
+      title.setCustomValidity(getValidateTitle());
     });
 
     price.addEventListener('input', function () {
-      price.setCustomValidity(getValidatePrice(typeHouse, price));
+      price.setCustomValidity(getValidatePrice());
     });
 
     typeHouse.addEventListener('change', function () {
-      setupPriceMinValue(typeHouse, price);
-      price.setCustomValidity(getValidatePrice(typeHouse, price));
+      setupPriceMinValue();
+      price.setCustomValidity(getValidatePrice());
     });
 
     capacity.addEventListener('change', function () {
-      setupValidityCapacity(capacity, roomCount);
+      setupValidityCapacity();
     });
 
     roomCount.addEventListener('change', function () {
-      setupValidityCapacity(capacity, roomCount);
+      setupValidityCapacity();
     });
-  }
+  };
 
   var setupFormNotActive = function () {
     setupFormElementStatus({disabled: true});
     setupAddress({activePage: false});
-  }
+  };
+
+  setupFormNotActive();
 
   window.form = {
     activePage: setupFormActive,
     notActivePage: setupFormNotActive
-  }
+  };
 
 })();

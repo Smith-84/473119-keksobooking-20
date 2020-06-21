@@ -1,4 +1,5 @@
 'use strict';
+
 (function () {
   var mapPin = document.querySelector('.map__pin--main');
   var cityMap = document.querySelector('.map');
@@ -20,83 +21,47 @@
   };
 
   var renderNewAds = function () {
-
     var fragment = document.createDocumentFragment();
-
-    var adsData = window.data.createAdsData()
-
+    var adsData = window.data.createAdsData();
     for (var i = 0; i < adsData.length; i++) {
       var newAdsElement = createMapPin(adsData[i], i);
       fragment.appendChild(newAdsElement);
     }
-
     cityMapAds.appendChild(fragment);
-  }
+  };
 
-  var handler = function (evt) {
-      console.log('hui')
-      if (window.card.openedCard) {
-        window.card.openedCard.remove();
-      }
-
-      var newCard;
-      var buttonPin = evt.target.dataset.card;
-      var imgPin = evt.target.parentNode.dataset.card;
-
-      if (buttonPin) {
-        newCard = window.card.createCard(window.data.ads[buttonPin]);
-      } else if (imgPin) {
-        newCard = window.card.createCard(window.data.ads[imgPin]);
-      } else {
-        return;
-      }
-
-      window.card.openedCard = newCard;
-      console.log(window.card.openedCard)
-      // window.card.closeOpenedCardHandler();
-      mapFilters.before(newCard);
-
+  var getAdNumber = function (evt) {
+    var buttonPin = evt.target.dataset.card;
+    var imgPin = evt.target.parentNode.dataset.card;
+    if (buttonPin) {
+      return buttonPin;
+    } else if (imgPin) {
+      return imgPin;
+    } else {
+      return false;
     }
+  };
 
+  var setupMapActive = function () {
+    cityMap.classList.remove('map--faded');
+    renderNewAds();
 
-  var btnMapPins = function () {
-    cityMapAds.addEventListener('click', handler);
-  }
-
-  var buttonMouseDownHandler = function (evt) {
-    if (evt.button === 0) {
-      cityMap.classList.remove('map--faded');
-      window.form.activePage();
-      mapPin.removeEventListener('mousedown', buttonMouseDownHandler);
-      // mapPin.removeEventListener('keydown', buttonKeyDownHandler);
-      renderNewAds();
-      btnMapPins()
+    cityMapAds.addEventListener('click', function (evt) {
+      var adsNumber = getAdNumber(evt);
+      if (adsNumber) {
+        var openCard = window.card.cardOpeningHandler(adsNumber);
+        mapFilters.before(openCard);
       }
-    };
+    });
 
+    cityMapAds.addEventListener('keydown', function (evt) {
+      if (evt.code === 'Escape') {
+        window.card.btnEscHandler();
+      }
+    });
+  };
 
-  // var buttonKeyDownHandler = function (evt) {
-  //   if (evt.code === 'Enter') {
-  //     cityMap.classList.remove('map--faded');
-  //     window.form.activePage();
-  //     mapPin.removeEventListener('mousedown', buttonMouseDownHandler);
-  //     mapPin.removeEventListener('keydown', buttonKeyDownHandler);
-  //
-  //     renderNewAds();
-  //
-  //     cityMapAds.addEventListener('click', function (evt) {
-  //       window.card.getNewCard(evt)
-  //       // console.log(evt)
-  //       // mapFilters.before(window.card.getNewCard(evt));
-  //
-  //     });
-  //   }
-  // };
-
-
-  mapPin.addEventListener('mousedown', buttonMouseDownHandler);
-  // mapPin.addEventListener('keydown', buttonKeyDownHandler);
-
-  window.mapPin = mapPin
+  window.mapPin = mapPin;
+  window.setupMapActive = setupMapActive;
 
 })();

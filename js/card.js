@@ -2,7 +2,7 @@
 
 (function () {
 
-  var openedCard;
+  var openedCard = null;
 
   var createCard = function (ad) {
     var templateCard = document.querySelector('#card').content.querySelector('.map__card');
@@ -65,26 +65,33 @@
     return newCardBlock;
   };
 
-  var closeOpenedCardHandler = function () {
-    var btnClose = openedCard.querySelector('.popup__close');
+  var btnCloseCardHandler = function (card) {
+    var btnClose = card.querySelector('.popup__close');
     btnClose.addEventListener('click', function () {
-      openedCard.remove();
+      card.remove();
     });
   };
 
+  var btnEscHandler = function () {
+    if (openedCard) {
+      openedCard.remove();
+    }
+  };
 
-  // cityMapAds.addEventListener('keydown', function (evt) {
-  //   if (evt.code === 'Escape') {
-  //     if (openedCard) {
-  //       openedCard.remove();
-  //     }
-  //   }
-  // });
+  var cardOpeningHandler = function (adsNumber) {
+    if (openedCard) {
+      openedCard.remove();
+    }
+    var newCard = createCard(window.data.ads[adsNumber]);
+    openedCard = newCard;
+    btnCloseCardHandler(newCard);
+    return newCard;
+  };
 
   window.card = {
-    openedCard: openedCard,
     createCard: createCard,
-    closeOpenedCardHandler: closeOpenedCardHandler
-  }
+    btnEscHandler: btnEscHandler,
+    cardOpeningHandler: cardOpeningHandler
+  };
 
 })();

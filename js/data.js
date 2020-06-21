@@ -15,7 +15,7 @@
     for (var i = 0; i < ADS_COUNT; i++) {
       myAds.push(createAdData(i + 1));
     }
-    return myAds
+    return myAds;
   };
 
   var createAdData = function (numberAd) {
@@ -66,6 +66,6 @@
   window.data = {
     ads: myAds,
     createAdsData: createAdsData
-  }
+  };
 
 })();
