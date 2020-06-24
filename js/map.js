@@ -5,6 +5,7 @@
   var cityMap = document.querySelector('.map');
   var cityMapAds = document.querySelector('.map__pins');
   var mapFilters = document.querySelector('.map__filters-container');
+  var activePin = null;
 
   var createMapPin = function (ad, dataNumber) {
     var pinWidth = 50;
@@ -20,20 +21,28 @@
     return newAdsBlock;
   };
 
-  var renderNewAds = function () {
+  var renderAds = function (data) {
     var fragment = document.createDocumentFragment();
-    var adsData = window.data.createAdsData();
-    for (var i = 0; i < adsData.length; i++) {
-      var newAdsElement = createMapPin(adsData[i], i);
-      fragment.appendChild(newAdsElement);
+    for (var i = 0; i < window.data.limit; i++) {
+      if (data[i].offer) {
+        var newAdsElement = createMapPin(data[i], i);
+        window.data.ads.push(data[i]);
+        fragment.appendChild(newAdsElement);
+      }
     }
     cityMapAds.appendChild(fragment);
   };
 
   var cityMapAdsClickHandler = function (evt) {
-    if (evt.target.closest('button')) {
-      var numberPin = evt.target.closest('button').dataset.card;
+    var pinOnMap = evt.target.closest('button');
+    if (pinOnMap) {
+      var numberPin = pinOnMap.dataset.card;
       if (numberPin) {
+        if (activePin) {
+          activePin.classList.remove('map__pin--active');
+        }
+        activePin = pinOnMap;
+        pinOnMap.classList.add('map__pin--active');
         mapFilters.before(window.card.getOpenedCard(numberPin));
       }
     }
@@ -47,7 +56,7 @@
 
   var setupMapActive = function () {
     cityMap.classList.remove('map--faded');
-    renderNewAds();
+    window.load(renderAds);
     cityMapAds.addEventListener('click', cityMapAdsClickHandler);
     cityMapAds.addEventListener('keydown', cityMapAdsKeyDownHandler);
   };

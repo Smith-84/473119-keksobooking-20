@@ -73,16 +73,12 @@
   };
 
   var getOpenedCard = function (numberPin) {
-    if (openedCard) {
-      openedCard.remove();
-    }
+    closeOpenCard();
     var newCard = createCard(window.data.ads[numberPin]);
     var btnClose = newCard.querySelector('.popup__close');
-
     btnClose.addEventListener('click', function () {
       closeOpenCard();
     });
-
     openedCard = newCard;
     return newCard;
   };
