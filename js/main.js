@@ -26,4 +26,3 @@
   window.map.mapPin.addEventListener('mousedown', buttonMouseDownHandler);
 
 })();
-
