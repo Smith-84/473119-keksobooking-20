@@ -30,38 +30,32 @@
     cityMapAds.appendChild(fragment);
   };
 
-  var getAdNumber = function (evt) {
-    var buttonPin = evt.target.dataset.card;
-    var imgPin = evt.target.parentNode.dataset.card;
-    if (buttonPin) {
-      return buttonPin;
-    } else if (imgPin) {
-      return imgPin;
-    } else {
-      return false;
+  var cityMapAdsClickHandler = function (evt) {
+    if (evt.target.closest('button')) {
+      var numberPin = evt.target.closest('button').dataset.card;
+      if (numberPin) {
+        mapFilters.before(window.card.getOpenedCard(numberPin));
+      }
+    }
+  };
+
+  var cityMapAdsKeyDownHandler = function (evt) {
+    if (evt.code === 'Escape') {
+      window.card.closeOpenCard();
     }
   };
 
   var setupMapActive = function () {
     cityMap.classList.remove('map--faded');
     renderNewAds();
+    cityMapAds.addEventListener('click', cityMapAdsClickHandler);
+    cityMapAds.addEventListener('keydown', cityMapAdsKeyDownHandler);
+  }
 
-    cityMapAds.addEventListener('click', function (evt) {
-      var adsNumber = getAdNumber(evt);
-      if (adsNumber) {
-        var openCard = window.card.cardOpeningHandler(adsNumber);
-        mapFilters.before(openCard);
-      }
-    });
+  window.map = {
+    mapPin: mapPin,
+    setupMapActive: setupMapActive,
+  }
 
-    cityMapAds.addEventListener('keydown', function (evt) {
-      if (evt.code === 'Escape') {
-        window.card.btnEscHandler();
-      }
-    });
-  };
-
-  window.mapPin = mapPin;
-  window.setupMapActive = setupMapActive;
 
 })();

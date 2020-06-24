@@ -16,12 +16,12 @@
     var address = document.querySelector('#address');
     var mapPinWidth = 65;
     var mapPinHeight = 65;
-    var newWidth = Math.round((window.mapPin.offsetLeft + mapPinWidth / 2));
+    var newWidth = Math.round((window.map.mapPin.offsetLeft + mapPinWidth / 2));
     if (status.activePage) {
-      address.value = newWidth + ',' + (mapPinHeight + window.mapPin.offsetTop + 10);
+      address.value = newWidth + ',' + (mapPinHeight + window.map.mapPin.offsetTop + 10);
     } else {
       var newHeight = Math.round(mapPinHeight / 2);
-      address.value = newWidth + ',' + (newHeight + window.mapPin.offsetTop);
+      address.value = newWidth + ',' + (newHeight + window.map.mapPin.offsetTop);
     }
   };
 

@@ -4,9 +4,9 @@
 
   var setupPageActive = function () {
     window.form.activePage();
-    window.setupMapActive();
-    window.mapPin.removeEventListener('mousedown', buttonMouseDownHandler);
-    window.mapPin.removeEventListener('keydown', buttonKeyDownHandler);
+    window.map.setupMapActive();
+    window.map.mapPin.removeEventListener('mousedown', buttonMouseDownHandler);
+    window.map.mapPin.removeEventListener('keydown', buttonKeyDownHandler);
   };
 
 
@@ -22,8 +22,8 @@
     }
   };
 
-  window.mapPin.addEventListener('keydown', buttonKeyDownHandler);
-  window.mapPin.addEventListener('mousedown', buttonMouseDownHandler);
+  window.map.mapPin.addEventListener('keydown', buttonKeyDownHandler);
+  window.map.mapPin.addEventListener('mousedown', buttonMouseDownHandler);
 
 })();
 

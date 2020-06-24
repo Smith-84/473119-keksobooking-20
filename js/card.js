@@ -65,33 +65,32 @@
     return newCardBlock;
   };
 
-  var btnCloseCardHandler = function (card) {
-    var btnClose = card.querySelector('.popup__close');
-    btnClose.addEventListener('click', function () {
-      card.remove();
-    });
-  };
 
-  var btnEscHandler = function () {
+  var closeOpenCard = function () {
     if (openedCard) {
       openedCard.remove();
     }
   };
 
-  var cardOpeningHandler = function (adsNumber) {
-    if (openedCard) {
-      openedCard.remove();
-    }
-    var newCard = createCard(window.data.ads[adsNumber]);
-    openedCard = newCard;
-    btnCloseCardHandler(newCard);
-    return newCard;
+  var getOpenedCard = function (numberPin) {
+        if (openedCard) {
+          openedCard.remove();
+        }
+        var newCard = createCard(window.data.ads[numberPin]);
+        var btnClose = newCard.querySelector('.popup__close');
+
+        btnClose.addEventListener('click', function () {
+          closeOpenCard();
+        });
+
+        openedCard = newCard;
+        return newCard
   };
 
   window.card = {
     createCard: createCard,
-    btnEscHandler: btnEscHandler,
-    cardOpeningHandler: cardOpeningHandler
+    closeOpenCard: closeOpenCard,
+    getOpenedCard: getOpenedCard
   };
 
 })();
