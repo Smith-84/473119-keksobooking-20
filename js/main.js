@@ -25,4 +25,5 @@
   window.map.mapPin.addEventListener('keydown', buttonKeyDownHandler);
   window.map.mapPin.addEventListener('mousedown', buttonMouseDownHandler);
 
-})();
+}
+)();
