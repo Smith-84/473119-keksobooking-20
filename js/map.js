@@ -50,12 +50,12 @@
     renderNewAds();
     cityMapAds.addEventListener('click', cityMapAdsClickHandler);
     cityMapAds.addEventListener('keydown', cityMapAdsKeyDownHandler);
-  }
+  };
 
   window.map = {
     mapPin: mapPin,
     setupMapActive: setupMapActive,
-  }
+  };
 
 
 })();

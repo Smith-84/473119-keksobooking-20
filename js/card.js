@@ -73,18 +73,18 @@
   };
 
   var getOpenedCard = function (numberPin) {
-        if (openedCard) {
-          openedCard.remove();
-        }
-        var newCard = createCard(window.data.ads[numberPin]);
-        var btnClose = newCard.querySelector('.popup__close');
+    if (openedCard) {
+      openedCard.remove();
+    }
+    var newCard = createCard(window.data.ads[numberPin]);
+    var btnClose = newCard.querySelector('.popup__close');
 
-        btnClose.addEventListener('click', function () {
-          closeOpenCard();
-        });
+    btnClose.addEventListener('click', function () {
+      closeOpenCard();
+    });
 
-        openedCard = newCard;
-        return newCard
+    openedCard = newCard;
+    return newCard;
   };
 
   window.card = {
