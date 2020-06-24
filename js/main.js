@@ -272,31 +272,18 @@ var setupPageActive = function () {
   setupAddress({activePage: true});
 
   cityMapAds.addEventListener('click', function (evt) {
-
-    var getAdNumber = function () {
-      var buttonPin = evt.target.dataset.card;
-      var imgPin = evt.target.parentNode.dataset.card;
-      if (buttonPin) {
-        return buttonPin;
-      } else if (imgPin) {
-        return imgPin;
-      } else {
-        return false;
+    if (evt.target.closest('button')) {
+      var numberPin = evt.target.closest('button').dataset.card;
+      if (numberPin) {
+        if (openedCard) {
+          openedCard.remove();
+        }
+        var newCard = createCard(adsData[numberPin]);
+        openedCard = newCard;
+        closeOpenedCardHandler(newCard);
+        mapFilters.before(newCard);
       }
-    };
-
-    var adNumber = getAdNumber();
-
-    if (adNumber) {
-      if (openedCard) {
-        openedCard.remove();
-      }
-      var newCard = createCard(adsData[adNumber]);
-      openedCard = newCard;
-      closeOpenedCardHandler(newCard);
-      mapFilters.before(newCard);
     }
-
   });
 
   cityMapAds.addEventListener('keydown', function (evt) {
