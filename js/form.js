@@ -93,7 +93,7 @@
     }
   };
 
-  var setupFormActive = function () {
+  var activateForm = function () {
     adForm.classList.remove('ad-form--disabled');
     setupFormElementStatus({disabled: false});
     setupAddress({activePage: true});
@@ -127,16 +127,16 @@
     });
   };
 
-  var setupFormNotActive = function () {
+  var deactivateForm = function () {
     setupFormElementStatus({disabled: true});
     setupAddress({activePage: false});
   };
 
-  setupFormNotActive();
+  deactivateForm();
 
   window.form = {
-    activePage: setupFormActive,
-    notActivePage: setupFormNotActive
+    activateForm: activateForm,
+    deactivateForm: deactivateForm
   };
 
 })();

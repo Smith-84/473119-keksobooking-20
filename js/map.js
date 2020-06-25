@@ -31,10 +31,15 @@
   };
 
   var cityMapAdsClickHandler = function (evt) {
-    if (evt.target.closest('button')) {
-      var numberPin = evt.target.closest('button').dataset.card;
+    var button = evt.target.closest('button');
+    if (button) {
+      var numberPin = button.dataset.card;
       if (numberPin) {
-        mapFilters.before(window.card.getOpenedCard(numberPin));
+        button.classList.add('map__pin--active');
+        var card = window.card.getOpenedCard(numberPin, button);
+        if (card) {
+          mapFilters.before(card);
+        }
       }
     }
   };

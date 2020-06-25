@@ -3,7 +3,7 @@
 (function () {
 
   var setupPageActive = function () {
-    window.form.activePage();
+    window.form.activateForm();
     window.map.setupMapActive();
     window.map.mapPin.removeEventListener('mousedown', buttonMouseDownHandler);
     window.map.mapPin.removeEventListener('keydown', buttonKeyDownHandler);

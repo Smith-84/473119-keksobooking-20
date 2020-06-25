@@ -3,6 +3,7 @@
 (function () {
 
   var openedCard = null;
+  var activePinButton = null;
 
   var createCard = function (ad) {
     var templateCard = document.querySelector('#card').content.querySelector('.map__card');
@@ -36,15 +37,6 @@
       return fragment;
     };
 
-    popupTitle.textContent = ad.offer.title;
-    popupAddress.textContent = ad.offer.address;
-    popupPrice.textContent = ad.offer.price + '₽/ночь.';
-    popupType.textContent = namesTypeHouses[ad.offer.type];
-    popupCapacity.textContent = ad.offer.rooms + ' комнаты для ' + ad.offer.guests + ' гостей';
-    popupTime.textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout;
-    popupFeatures.appendChild(featuresSetup());
-    popupDesc.textContent = ad.offer.description;
-
     var photosSetup = function () {
       var fragment = document.createDocumentFragment();
       for (var i = 0; i < ad.offer.photos.length; i++) {
@@ -59,6 +51,14 @@
       return fragment;
     };
 
+    popupTitle.textContent = ad.offer.title;
+    popupAddress.textContent = ad.offer.address;
+    popupPrice.textContent = ad.offer.price + '₽/ночь.';
+    popupType.textContent = namesTypeHouses[ad.offer.type];
+    popupCapacity.textContent = ad.offer.rooms + ' комнаты для ' + ad.offer.guests + ' гостей';
+    popupTime.textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout;
+    popupFeatures.appendChild(featuresSetup());
+    popupDesc.textContent = ad.offer.description;
     photo.replaceWith(photosSetup());
     popupAvatar.src = ad.author.avatar;
 
@@ -67,22 +67,24 @@
 
 
   var closeOpenCard = function () {
-    if (openedCard) {
+    if (openedCard && activePinButton) {
       openedCard.remove();
+      activePinButton.classList.remove('map__pin--active');
     }
   };
 
-  var getOpenedCard = function (numberPin) {
-    if (openedCard) {
-      openedCard.remove();
+  var getOpenedCard = function (numberPin, button) {
+    closeOpenCard();
+    activePinButton = button;
+    var ad = window.data.ads[numberPin];
+    if (!ad) {
+      return false;
     }
-    var newCard = createCard(window.data.ads[numberPin]);
+    var newCard = createCard(ad);
     var btnClose = newCard.querySelector('.popup__close');
-
     btnClose.addEventListener('click', function () {
       closeOpenCard();
     });
-
     openedCard = newCard;
     return newCard;
   };
