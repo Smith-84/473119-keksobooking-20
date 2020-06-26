@@ -3,7 +3,6 @@
 (function () {
 
   var ADS_COUNT = 8;
-  var myAds = [];
 
   var getRandomInt = function (min, max) {
     min = Math.ceil(min);
@@ -12,6 +11,7 @@
   };
 
   var createAdsData = function () {
+    var myAds = [];
     for (var i = 0; i < ADS_COUNT; i++) {
       myAds.push(createAdData(i + 1));
     }
@@ -64,7 +64,6 @@
   };
 
   window.data = {
-    ads: myAds,
     createAdsData: createAdsData
   };
 

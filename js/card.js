@@ -2,10 +2,7 @@
 
 (function () {
 
-  var openedCard = null;
-  var activePinButton = null;
-
-  var createCard = function (ad) {
+  var createCard = function (ad, btnCloseClickHandler) {
     var templateCard = document.querySelector('#card').content.querySelector('.map__card');
     var newCardBlock = templateCard.cloneNode(true);
     var popupAvatar = newCardBlock.querySelector('.popup__avatar');
@@ -19,6 +16,7 @@
     var popupDesc = newCardBlock.querySelector('.popup__description');
     var popupPhotos = newCardBlock.querySelector('.popup__photos');
     var photo = popupPhotos.querySelector('img');
+    var btnClose = newCardBlock.querySelector('.popup__close');
     var namesTypeHouses = {
       'flat': 'Квартира',
       'bungalo': 'Бунгало',
@@ -61,38 +59,13 @@
     popupDesc.textContent = ad.offer.description;
     photo.replaceWith(photosSetup());
     popupAvatar.src = ad.author.avatar;
+    btnClose.addEventListener('click', btnCloseClickHandler)
 
     return newCardBlock;
   };
 
-
-  var closeOpenCard = function () {
-    if (openedCard && activePinButton) {
-      openedCard.remove();
-      activePinButton.classList.remove('map__pin--active');
-    }
-  };
-
-  var getOpenedCard = function (numberPin, button) {
-    closeOpenCard();
-    activePinButton = button;
-    var ad = window.data.ads[numberPin];
-    if (!ad) {
-      return false;
-    }
-    var newCard = createCard(ad);
-    var btnClose = newCard.querySelector('.popup__close');
-    btnClose.addEventListener('click', function () {
-      closeOpenCard();
-    });
-    openedCard = newCard;
-    return newCard;
-  };
-
   window.card = {
-    createCard: createCard,
-    closeOpenCard: closeOpenCard,
-    getOpenedCard: getOpenedCard
+    createCard: createCard
   };
 
 })();

@@ -2,28 +2,60 @@
 
 (function () {
 
-  var setupPageActive = function () {
-    window.form.activateForm();
-    window.map.setupMapActive();
-    window.map.mapPin.removeEventListener('mousedown', buttonMouseDownHandler);
-    window.map.mapPin.removeEventListener('keydown', buttonKeyDownHandler);
-  };
+    var mapPin = document.querySelector('.map__pin--main');
+
+    var setupPageActive = function () {
+      var adsData = window.data.createAdsData()
+
+      mapPin.removeEventListener('mousedown', buttonMouseDownHandler);
+      mapPin.removeEventListener('keydown', buttonKeyDownHandler);
 
 
-  var buttonMouseDownHandler = function (evt) {
-    if (evt.button === 0) {
-      setupPageActive();
-    }
-  };
+      var mapClickHandler = function (evt) {
+        var button = evt.target.closest('button');
+        if (button) {
+          var numberPin = button.dataset.card;
+          if (numberPin) {
+            actionOnCloseCard()
+            window.pin.pinClickHandler(button, numberPin)
+            var card = window.card.createCard(adsData[numberPin], actionOnCloseCard)
+            window.map.renderCardOnMap(card)
+          }
+        }
+      };
 
-  var buttonKeyDownHandler = function (evt) {
-    if (evt.code === 'Enter') {
-      setupPageActive();
-    }
-  };
+      var mapKeyDownHandler = function (evt) {
+        if (evt.code === 'Escape') {
+          actionOnCloseCard();
+        }
+      };
 
-  window.map.mapPin.addEventListener('keydown', buttonKeyDownHandler);
-  window.map.mapPin.addEventListener('mousedown', buttonMouseDownHandler);
+      var actionOnCloseCard = function (evt) {
+        window.pin.deactivatePin();
+        window.map.closeCardOnMap();
+      };
 
-}
+      window.form.activateForm(mapPin);
+      window.map.setupMapActive(adsData, mapClickHandler, mapKeyDownHandler);
+      window.map.renderPinsOnMap(adsData, window.pin.createPin)
+
+    };
+
+    var buttonMouseDownHandler = function (evt) {
+      if (evt.button === 0) {
+        setupPageActive();
+      }
+    };
+
+    var buttonKeyDownHandler = function (evt) {
+      if (evt.code === 'Enter') {
+        setupPageActive();
+      }
+    };
+
+    window.form.deactivateForm(mapPin);
+    mapPin.addEventListener('keydown', buttonKeyDownHandler);
+    mapPin.addEventListener('mousedown', buttonMouseDownHandler);
+
+  }
 )();

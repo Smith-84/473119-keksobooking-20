@@ -12,16 +12,16 @@
   var timeIn = document.querySelector('#timein');
   var timeOut = document.querySelector('#timeout');
 
-  var setupAddress = function (status) {
+  var setupAddress = function (status, mapPin) {
     var address = document.querySelector('#address');
     var mapPinWidth = 65;
     var mapPinHeight = 65;
-    var newWidth = Math.round((window.map.mapPin.offsetLeft + mapPinWidth / 2));
+    var newWidth = Math.round((mapPin.offsetLeft + mapPinWidth / 2));
     if (status.activePage) {
-      address.value = newWidth + ',' + (mapPinHeight + window.map.mapPin.offsetTop + 10);
+      address.value = newWidth + ',' + (mapPinHeight + mapPin.offsetTop + 10);
     } else {
       var newHeight = Math.round(mapPinHeight / 2);
-      address.value = newWidth + ',' + (newHeight + window.map.mapPin.offsetTop);
+      address.value = newWidth + ',' + (newHeight + mapPin.offsetTop);
     }
   };
 
@@ -93,10 +93,10 @@
     }
   };
 
-  var activateForm = function () {
+  var activateForm = function (mapPin) {
     adForm.classList.remove('ad-form--disabled');
     setupFormElementStatus({disabled: false});
-    setupAddress({activePage: true});
+    setupAddress({activePage: true}, mapPin);
     timeForm.addEventListener('change', function (evt) {
       if (evt.target === timeIn) {
         timeOut.value = evt.target.value;
@@ -127,12 +127,10 @@
     });
   };
 
-  var deactivateForm = function () {
+  var deactivateForm = function (mapPin) {
     setupFormElementStatus({disabled: true});
-    setupAddress({activePage: false});
+    setupAddress({activePage: false}, mapPin);
   };
-
-  deactivateForm();
 
   window.form = {
     activateForm: activateForm,
