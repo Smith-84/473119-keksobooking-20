@@ -59,7 +59,7 @@
     popupDesc.textContent = ad.offer.description;
     photo.replaceWith(photosSetup());
     popupAvatar.src = ad.author.avatar;
-    btnClose.addEventListener('click', btnCloseClickHandler)
+    btnClose.addEventListener('click', btnCloseClickHandler);
 
     return newCardBlock;
   };

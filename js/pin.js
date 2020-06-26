@@ -3,17 +3,17 @@
 (function () {
   var activePin = null;
 
-  var pinClickHandler = function (button, numberPin) {
+  var pinClickHandler = function (button) {
     deactivatePin();
     button.classList.add('map__pin--active');
-    activePin = button
-  }
+    activePin = button;
+  };
 
   var deactivatePin = function () {
     if (activePin) {
       activePin.classList.remove('map__pin--active');
     }
-  }
+  };
 
   var createPin = function (ad, dataNumber) {
     var pinWidth = 50;
