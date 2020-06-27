@@ -2,11 +2,52 @@
 
 (function () {
 
+  var mapPin = document.querySelector('.map__pin--main');
+
+  var moveParams = {
+    moveElem: mapPin,
+    mapOverlay: window.map.mapOverlay,
+    setupAddress: window.form.setupAddress
+  };
+
+  var mapPinMouseDownHandler = function (evt) {
+    window.move.movePin(evt, moveParams);
+  };
+
   var setupPageActive = function () {
-    window.form.activePage();
-    window.map.setupMapActive();
-    window.map.mapPin.removeEventListener('mousedown', buttonMouseDownHandler);
-    window.map.mapPin.removeEventListener('keydown', buttonKeyDownHandler);
+    var adsData = window.data.createAdsData();
+
+    mapPin.removeEventListener('mousedown', buttonMouseDownHandler);
+    mapPin.removeEventListener('keydown', buttonKeyDownHandler);
+
+    var mapClickHandler = function (evt) {
+      var button = evt.target.closest('button');
+      if (button) {
+        var numberPin = button.dataset.card;
+        if (numberPin) {
+          actionOnCloseCard();
+          window.pin.pinClickHandler(button);
+          var card = window.card.createCard(adsData[numberPin], actionOnCloseCard);
+          window.map.renderCardOnMap(card);
+        }
+      }
+    };
+
+    var mapKeyDownHandler = function (evt) {
+      if (evt.code === 'Escape') {
+        actionOnCloseCard();
+      }
+    };
+
+    var actionOnCloseCard = function () {
+      window.pin.deactivatePin();
+      window.map.closeCardOnMap();
+    };
+
+    window.form.activateForm(mapPin);
+    window.map.setupMapActive(adsData, mapClickHandler, mapKeyDownHandler);
+    window.map.renderPinsOnMap(adsData, window.pin.createPin);
+    mapPin.addEventListener('mousedown', mapPinMouseDownHandler);
   };
 
 
@@ -22,8 +63,8 @@
     }
   };
 
-  window.map.mapPin.addEventListener('keydown', buttonKeyDownHandler);
-  window.map.mapPin.addEventListener('mousedown', buttonMouseDownHandler);
+  window.form.deactivateForm(mapPin);
+  mapPin.addEventListener('keydown', buttonKeyDownHandler);
+  mapPin.addEventListener('mousedown', buttonMouseDownHandler);
 
 })();
-

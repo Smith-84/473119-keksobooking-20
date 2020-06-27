@@ -12,16 +12,16 @@
   var timeIn = document.querySelector('#timein');
   var timeOut = document.querySelector('#timeout');
 
-  var setupAddress = function (status) {
+  var setupAddress = function (mapPin, status) {
     var address = document.querySelector('#address');
     var mapPinWidth = 65;
     var mapPinHeight = 65;
-    var newWidth = Math.round((window.map.mapPin.offsetLeft + mapPinWidth / 2));
+    var newWidth = Math.round((mapPin.offsetLeft + mapPinWidth / 2));
     if (status.activePage) {
-      address.value = newWidth + ',' + (mapPinHeight + window.map.mapPin.offsetTop + 10);
+      address.value = newWidth + ',' + (mapPinHeight + mapPin.offsetTop + 10);
     } else {
       var newHeight = Math.round(mapPinHeight / 2);
-      address.value = newWidth + ',' + (newHeight + window.map.mapPin.offsetTop);
+      address.value = newWidth + ',' + (newHeight + mapPin.offsetTop);
     }
   };
 
@@ -97,10 +97,10 @@
     }
   };
 
-  var setupFormActive = function () {
+  var activateForm = function (mapPin) {
     adForm.classList.remove('ad-form--disabled');
     setupFormElementStatus({disabled: false});
-    setupAddress({activePage: true});
+    setupAddress(mapPin, {activePage: true});
     timeForm.addEventListener('change', function (evt) {
       if (evt.target === timeIn) {
         timeOut.value = evt.target.value;
@@ -131,16 +131,15 @@
     });
   };
 
-  var setupFormNotActive = function () {
+  var deactivateForm = function (mapPin) {
     setupFormElementStatus({disabled: true});
-    setupAddress({activePage: false});
+    setupAddress(mapPin, {activePage: false});
   };
 
-  setupFormNotActive();
-
   window.form = {
-    activePage: setupFormActive,
-    notActivePage: setupFormNotActive
+    activateForm: activateForm,
+    deactivateForm: deactivateForm,
+    setupAddress: setupAddress
   };
 
 })();

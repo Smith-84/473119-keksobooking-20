@@ -2,9 +2,7 @@
 
 (function () {
 
-  var openedCard = null;
-
-  var createCard = function (ad) {
+  var createCard = function (ad, btnCloseClickHandler) {
     var templateCard = document.querySelector('#card').content.querySelector('.map__card');
     var newCardBlock = templateCard.cloneNode(true);
     var popupAvatar = newCardBlock.querySelector('.popup__avatar');
@@ -18,6 +16,7 @@
     var popupDesc = newCardBlock.querySelector('.popup__description');
     var popupPhotos = newCardBlock.querySelector('.popup__photos');
     var photo = popupPhotos.querySelector('img');
+    var btnClose = newCardBlock.querySelector('.popup__close');
     var namesTypeHouses = {
       'flat': 'Квартира',
       'bungalo': 'Бунгало',
@@ -36,15 +35,6 @@
       return fragment;
     };
 
-    popupTitle.textContent = ad.offer.title;
-    popupAddress.textContent = ad.offer.address;
-    popupPrice.textContent = ad.offer.price + '₽/ночь.';
-    popupType.textContent = namesTypeHouses[ad.offer.type];
-    popupCapacity.textContent = ad.offer.rooms + ' комнаты для ' + ad.offer.guests + ' гостей';
-    popupTime.textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout;
-    popupFeatures.appendChild(featuresSetup());
-    popupDesc.textContent = ad.offer.description;
-
     var photosSetup = function () {
       var fragment = document.createDocumentFragment();
       for (var i = 0; i < ad.offer.photos.length; i++) {
@@ -59,34 +49,23 @@
       return fragment;
     };
 
+    popupTitle.textContent = ad.offer.title;
+    popupAddress.textContent = ad.offer.address;
+    popupPrice.textContent = ad.offer.price + '₽/ночь.';
+    popupType.textContent = namesTypeHouses[ad.offer.type];
+    popupCapacity.textContent = ad.offer.rooms + ' комнаты для ' + ad.offer.guests + ' гостей';
+    popupTime.textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout;
+    popupFeatures.appendChild(featuresSetup());
+    popupDesc.textContent = ad.offer.description;
     photo.replaceWith(photosSetup());
     popupAvatar.src = ad.author.avatar;
+    btnClose.addEventListener('click', btnCloseClickHandler);
 
     return newCardBlock;
   };
 
-
-  var closeOpenCard = function () {
-    if (openedCard) {
-      openedCard.remove();
-    }
-  };
-
-  var getOpenedCard = function (numberPin) {
-    closeOpenCard();
-    var newCard = createCard(window.data.ads[numberPin]);
-    var btnClose = newCard.querySelector('.popup__close');
-    btnClose.addEventListener('click', function () {
-      closeOpenCard();
-    });
-    openedCard = newCard;
-    return newCard;
-  };
-
   window.card = {
-    createCard: createCard,
-    closeOpenCard: closeOpenCard,
-    getOpenedCard: getOpenedCard
+    createCard: createCard
   };
 
 })();
