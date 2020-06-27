@@ -34,6 +34,7 @@
   };
 
   window.map = {
+    mapOverlay: cityMapAds,
     setupMapActive: setupMapActive,
     renderCardOnMap: renderCardOnMap,
     renderPinsOnMap: renderPinsOnMap,

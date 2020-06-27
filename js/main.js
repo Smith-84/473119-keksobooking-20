@@ -4,12 +4,21 @@
 
   var mapPin = document.querySelector('.map__pin--main');
 
+  var moveParams = {
+    moveElem: mapPin,
+    mapOverlay: window.map.mapOverlay,
+    setupAddress: window.form.setupAddress
+  }
+
+  var mapPinMouseDownHandler = function (evt){
+    window.move.movePin(evt, moveParams)
+  }
+
   var setupPageActive = function () {
     var adsData = window.data.createAdsData();
 
     mapPin.removeEventListener('mousedown', buttonMouseDownHandler);
     mapPin.removeEventListener('keydown', buttonKeyDownHandler);
-
 
     var mapClickHandler = function (evt) {
       var button = evt.target.closest('button');
@@ -38,8 +47,9 @@
     window.form.activateForm(mapPin);
     window.map.setupMapActive(adsData, mapClickHandler, mapKeyDownHandler);
     window.map.renderPinsOnMap(adsData, window.pin.createPin);
+    mapPin.addEventListener('mousedown', mapPinMouseDownHandler);
+  }
 
-  };
 
   var buttonMouseDownHandler = function (evt) {
     if (evt.button === 0) {
