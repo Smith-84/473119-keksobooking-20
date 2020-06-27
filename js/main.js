@@ -8,11 +8,11 @@
     moveElem: mapPin,
     mapOverlay: window.map.mapOverlay,
     setupAddress: window.form.setupAddress
-  }
+  };
 
-  var mapPinMouseDownHandler = function (evt){
-    window.move.movePin(evt, moveParams)
-  }
+  var mapPinMouseDownHandler = function (evt) {
+    window.move.movePin(evt, moveParams);
+  };
 
   var setupPageActive = function () {
     var adsData = window.data.createAdsData();
@@ -48,7 +48,7 @@
     window.map.setupMapActive(adsData, mapClickHandler, mapKeyDownHandler);
     window.map.renderPinsOnMap(adsData, window.pin.createPin);
     mapPin.addEventListener('mousedown', mapPinMouseDownHandler);
-  }
+  };
 
 
   var buttonMouseDownHandler = function (evt) {
