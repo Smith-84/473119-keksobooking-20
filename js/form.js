@@ -12,7 +12,7 @@
   var timeIn = document.querySelector('#timein');
   var timeOut = document.querySelector('#timeout');
 
-  var setupAddress = function (status, mapPin) {
+  var setupAddress = function (mapPin, status) {
     var address = document.querySelector('#address');
     var mapPinWidth = 65;
     var mapPinHeight = 65;
@@ -96,7 +96,7 @@
   var activateForm = function (mapPin) {
     adForm.classList.remove('ad-form--disabled');
     setupFormElementStatus({disabled: false});
-    setupAddress({activePage: true}, mapPin);
+    setupAddress(mapPin, {activePage: true});
     timeForm.addEventListener('change', function (evt) {
       if (evt.target === timeIn) {
         timeOut.value = evt.target.value;
@@ -129,12 +129,13 @@
 
   var deactivateForm = function (mapPin) {
     setupFormElementStatus({disabled: true});
-    setupAddress({activePage: false}, mapPin);
+    setupAddress(mapPin, {activePage: false});
   };
 
   window.form = {
     activateForm: activateForm,
-    deactivateForm: deactivateForm
+    deactivateForm: deactivateForm,
+    setupAddress: setupAddress
   };
 
 })();
