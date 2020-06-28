@@ -14,8 +14,21 @@
     window.move.movePin(evt, moveParams);
   };
 
-  var setupPageActive = function () {
-    var adsData = window.data.createAdsData();
+  var prepareData = function (receivedAds) {
+    var readyAds = [];
+    for (var i = 0; i < window.ADS_COUNT; i++) {
+      if (receivedAds[i].offer) {
+        readyAds.push(receivedAds[i]);
+      } else {
+        i--;
+      }
+    }
+    return readyAds;
+  };
+
+  var dataReceivedSuccess = function (receivedAds) {
+
+    var adsData = prepareData(receivedAds);
 
     mapPin.removeEventListener('mousedown', buttonMouseDownHandler);
     mapPin.removeEventListener('keydown', buttonKeyDownHandler);
@@ -48,8 +61,12 @@
     window.map.setupMapActive(adsData, mapClickHandler, mapKeyDownHandler);
     window.map.renderPinsOnMap(adsData, window.pin.createPin);
     mapPin.addEventListener('mousedown', mapPinMouseDownHandler);
+
   };
 
+  var setupPageActive = function () {
+    window.load(dataReceivedSuccess);
+  };
 
   var buttonMouseDownHandler = function (evt) {
     if (evt.button === 0) {
