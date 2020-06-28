@@ -14,11 +14,11 @@
 
   var setupAddress = function (mapPin, status) {
     var address = document.querySelector('#address');
-    var mapPinWidth = 65;
-    var mapPinHeight = 65;
+    var mapPinWidth = mapPin.clientWidth;
+    var mapPinHeight = mapPin.clientHeight;
     var newWidth = Math.round((mapPin.offsetLeft + mapPinWidth / 2));
     if (status.activePage) {
-      address.value = newWidth + ',' + (mapPinHeight + mapPin.offsetTop + 10);
+      address.value = newWidth + ',' + (mapPinHeight + mapPin.offsetTop + window.TAIL_HEIGHT);
     } else {
       var newHeight = Math.round(mapPinHeight / 2);
       address.value = newWidth + ',' + (newHeight + mapPin.offsetTop);
