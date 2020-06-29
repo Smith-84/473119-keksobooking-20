@@ -14,11 +14,11 @@
 
   var setupAddress = function (mapPin, status) {
     var address = document.querySelector('#address');
-    var mapPinWidth = 65;
-    var mapPinHeight = 65;
+    var mapPinWidth = mapPin.clientWidth;
+    var mapPinHeight = mapPin.clientHeight;
     var newWidth = Math.round((mapPin.offsetLeft + mapPinWidth / 2));
     if (status.activePage) {
-      address.value = newWidth + ',' + (mapPinHeight + mapPin.offsetTop + 10);
+      address.value = newWidth + ',' + (mapPinHeight + mapPin.offsetTop + window.TAIL_HEIGHT);
     } else {
       var newHeight = Math.round(mapPinHeight / 2);
       address.value = newWidth + ',' + (newHeight + mapPin.offsetTop);
@@ -81,15 +81,19 @@
     switch (typeHouse.value) {
       case 'flat':
         price.min = 1000;
+        price.placeholder = 1000;
         break;
       case 'house':
         price.min = 5000;
+        price.placeholder = 5000;
         break;
       case 'palace':
         price.min = 10000;
+        price.placeholder = 10000;
         break;
       default:
         price.min = 0;
+        price.placeholder = 0;
     }
   };
 
