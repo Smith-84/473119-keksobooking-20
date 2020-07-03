@@ -2,7 +2,7 @@
 
 (function () {
   var url = 'https://javascript.pages.academy/keksobooking/data';
-  window.load = function (onSuccess) {
+  window.load = function (url, onSuccess) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {

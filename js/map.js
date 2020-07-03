@@ -16,6 +16,12 @@
     cityMapAds.appendChild(fragment);
   };
 
+  var deleteRenderedPins = function () {
+    var alreadyRenderedPins = document.querySelectorAll('[data-card]')
+    for (var i = 0; i < alreadyRenderedPins.length; i++) {
+      alreadyRenderedPins[i].remove()
+  }}
+
   var renderCardOnMap = function (card) {
     openCardOnMap = card;
     mapFilters.before(card);
@@ -33,9 +39,17 @@
     cityMapAds.addEventListener('keydown', mapKeyDownHandler);
   };
 
+  var setupMapInActive = function (mapClickHandler, mapKeyDownHandler) {
+    cityMap.classList.add('map--faded');
+    deleteRenderedPins();
+    cityMapAds.removeEventListener('keydown', mapClickHandler);
+    cityMapAds.removeEventListener('keydown', mapKeyDownHandler);
+  };
+
   window.map = {
     mapOverlay: cityMapAds,
     setupMapActive: setupMapActive,
+    setupMapInActive: setupMapInActive,
     renderCardOnMap: renderCardOnMap,
     renderPinsOnMap: renderPinsOnMap,
     closeCardOnMap: closeCardOnMap
