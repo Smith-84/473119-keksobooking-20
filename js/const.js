@@ -6,6 +6,4 @@
   window.MAX_LIMIT_Y = 630;
   window.TAIL_HEIGHT = 10;
 
-
-
 })();

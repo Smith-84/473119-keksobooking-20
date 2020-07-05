@@ -17,10 +17,11 @@
   };
 
   var deleteRenderedPins = function () {
-    var alreadyRenderedPins = document.querySelectorAll('[data-card]')
+    var alreadyRenderedPins = document.querySelectorAll('[data-card]');
     for (var i = 0; i < alreadyRenderedPins.length; i++) {
-      alreadyRenderedPins[i].remove()
-  }}
+      alreadyRenderedPins[i].remove();
+    }
+  };
 
   var renderCardOnMap = function (card) {
     openCardOnMap = card;

@@ -45,35 +45,39 @@
     window.move.movePin(evt, moveParams);
   };
 
-
   var prepareData = function (receivedAds) {
     return receivedAds.slice(0, window.ADS_COUNT).filter(ad => typeof ad.offer !== "undefined")
   };
-
 
   var dataSubmitSuccess = function () {
     setupPageInactive();
     var successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
     var successMessage = successMessageTemplate.cloneNode(true);
-    document.body.appendChild(successMessage);
-    document.addEventListener('keydown', function (evt) {
-      if (evt.code === 'Escape') {
+    var documentKeyDownHandler = function (evt) {
         successMessage.remove()
-      }
-    });
+        document.removeEventListener('keydown', documentKeyDownHandler)
+    }
+    document.body.appendChild(successMessage);
+    document.addEventListener('keydown', documentKeyDownHandler);
     successMessage.addEventListener('click', function () {
       successMessage.remove()
     })
   };
 
   var dataSubmitError= function () {
-    var errorMessageTemplate = document.querySelector('#error').content.querySelector('.success');
+    var main = document.querySelector('main')
+    var errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
     var errorMessage = errorMessageTemplate.cloneNode(true);
-    console.log(errorMessage)
-    // Если при отправке данных произошла ошибка запроса, покажите соответствующее сообщение.
-    // Разметку сообщения, которая находится в блоке #error в шаблоне template, нужно разместить в main.
-    // Сообщение должно исчезать после нажатия на кнопку
-    // .error__button, по нажатию на клавишу Esc и по клику на произвольную область экрана.
+    var errorButton = errorMessage.querySelector('.error__button')
+    var documentKeyDownHandler = function (evt) {
+      errorMessage.remove()
+      document.removeEventListener('keydown', documentKeyDownHandler)
+    }
+    errorButton.addEventListener('click', function () {
+      errorMessage.remove()
+    })
+    document.addEventListener('keydown', documentKeyDownHandler);
+    main.appendChild(errorMessage)
   };
 
   var adFormSubmitHandler = function (evt) {
@@ -86,7 +90,6 @@
     setupPageInactive();
   };
 
-
   var dataReceivedSuccess = function (receivedAds) {
     adsData = prepareData(receivedAds);
     mapPin.removeEventListener('mousedown', buttonMouseDownHandler);
@@ -96,7 +99,6 @@
     window.map.renderPinsOnMap(adsData, window.pin.createPin);
     mapPin.addEventListener('mousedown', mapPinMouseDownHandler);
   };
-
 
   var setupPageActive = function () {
     var url = 'https://javascript.pages.academy/keksobooking/data';
@@ -114,7 +116,6 @@
     mapPin.addEventListener('mousedown', buttonMouseDownHandler);
     var adsData = null
   };
-
 
   var buttonMouseDownHandler = function (evt) {
     if (evt.button === 0) {

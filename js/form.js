@@ -109,7 +109,7 @@
   var typeHouseChangeHandler = function () {
     setupPriceMinValue();
     price.setCustomValidity(getValidatePrice());
-  }
+  };
 
   var capacityChangeHandler = function () {
     setupValidityCapacity();
@@ -143,15 +143,15 @@
   };
 
   var removeAdFormAllEvtList = function (adFormSubmitHandler, adFormResetClickHandler) {
-    adForm.reset()
+    adForm.reset();
     title.removeEventListener('input', titleInputHandler);
     price.removeEventListener('input', priceInputHandler);
     typeHouse.removeEventListener('change', typeHouseChangeHandler);
     capacity.removeEventListener('change', capacityChangeHandler);
     roomCount.removeEventListener('change', roomCountChangeHandler);
-    adForm.removeEventListener('submit', adFormSubmitHandler)
+    adForm.removeEventListener('submit', adFormSubmitHandler);
     adFormReset.removeEventListener('click', adFormResetClickHandler);
-  }
+  };
 
   var deactivateForm = function (mapPin, adFormSubmitHandler, adFormResetClickHandler) {
     if (adFormSubmitHandler && adFormResetClickHandler) {
