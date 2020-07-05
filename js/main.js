@@ -78,7 +78,7 @@
 
   var adFormSubmitHandler = function (evt) {
     evt.preventDefault();
-    var url = 'https://javascript.pages.academy/keksobooking6;
+    var url = 'https://javascript.pages.academy/keksobooking';
     window.upload(new FormData(evt.target), url, dataSubmitSuccess, dataSubmitError);
   };
 
