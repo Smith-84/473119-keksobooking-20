@@ -5,21 +5,22 @@
   var cityMap = document.querySelector('.map');
   var cityMapAds = document.querySelector('.map__pins');
   var mapFilters = document.querySelector('.map__filters-container');
+  var renderedPinsOnMap = [];
   var openCardOnMap = null;
 
   var renderPinsOnMap = function (adsData, createPin) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < adsData.length; i++) {
       var newAdsElement = createPin(adsData[i], i);
+      renderedPinsOnMap.push(newAdsElement);
       fragment.appendChild(newAdsElement);
     }
     cityMapAds.appendChild(fragment);
   };
 
   var deleteRenderedPins = function () {
-    var alreadyRenderedPins = document.querySelectorAll('[data-card]');
-    for (var i = 0; i < alreadyRenderedPins.length; i++) {
-      alreadyRenderedPins[i].remove();
+    for (var i = 0; i < renderedPinsOnMap.length; i++) {
+      renderedPinsOnMap[i].remove();
     }
   };
 

@@ -22,12 +22,6 @@
     }
   };
 
-  var mapKeyDownHandler = function (evt) {
-    if (evt.code === 'Escape') {
-      actionOnCloseCard();
-    }
-  };
-
   var mapClickHandler = function (evt) {
     var button = evt.target.closest('button');
     if (button) {
@@ -46,49 +40,52 @@
   };
 
   var prepareData = function (receivedAds) {
-    return receivedAds.slice(0, window.ADS_COUNT).filter(ad => typeof ad.offer !== "undefined")
+    return receivedAds.slice(0, window.ADS_COUNT).filter(function (ad) {
+      return ad.offer !== 'undefined';
+    });
   };
 
   var dataSubmitSuccess = function () {
     setupPageInactive();
     var successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
     var successMessage = successMessageTemplate.cloneNode(true);
-    var documentKeyDownHandler = function (evt) {
-        successMessage.remove()
-        document.removeEventListener('keydown', documentKeyDownHandler)
-    }
+    var documentKeyDownHandler = function () {
+      successMessage.remove();
+      document.removeEventListener('keydown', documentKeyDownHandler);
+    };
     document.body.appendChild(successMessage);
     document.addEventListener('keydown', documentKeyDownHandler);
     successMessage.addEventListener('click', function () {
-      successMessage.remove()
-    })
+      successMessage.remove();
+    });
   };
 
-  var dataSubmitError= function () {
-    var main = document.querySelector('main')
+  var dataSubmitError = function () {
+    var main = document.querySelector('main');
     var errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
     var errorMessage = errorMessageTemplate.cloneNode(true);
-    var errorButton = errorMessage.querySelector('.error__button')
-    var documentKeyDownHandler = function (evt) {
-      errorMessage.remove()
-      document.removeEventListener('keydown', documentKeyDownHandler)
-    }
+    var errorButton = errorMessage.querySelector('.error__button');
+    var documentKeyDownHandler = function () {
+      errorMessage.remove();
+      document.removeEventListener('keydown', documentKeyDownHandler);
+    };
     errorButton.addEventListener('click', function () {
-      errorMessage.remove()
-    })
+      errorMessage.remove();
+    });
     document.addEventListener('keydown', documentKeyDownHandler);
-    main.appendChild(errorMessage)
+    main.appendChild(errorMessage);
   };
 
   var adFormSubmitHandler = function (evt) {
     evt.preventDefault();
-    var url = 'https://javascript.pages.academy/keksobooking';
-    window.upload(new FormData(evt.target), url, dataSubmitSuccess, dataSubmitError)
+    var url = 'https://javascript.pages.academy/keksobooking6;
+    window.upload(new FormData(evt.target), url, dataSubmitSuccess, dataSubmitError);
   };
 
   var adFormResetClickHandler = function () {
     setupPageInactive();
   };
+
 
   var dataReceivedSuccess = function (receivedAds) {
     adsData = prepareData(receivedAds);
@@ -99,6 +96,7 @@
     window.map.renderPinsOnMap(adsData, window.pin.createPin);
     mapPin.addEventListener('mousedown', mapPinMouseDownHandler);
   };
+
 
   var setupPageActive = function () {
     var url = 'https://javascript.pages.academy/keksobooking/data';
@@ -114,8 +112,9 @@
     actionOnCloseCard();
     mapPin.addEventListener('keydown', buttonKeyDownHandler);
     mapPin.addEventListener('mousedown', buttonMouseDownHandler);
-    var adsData = null
+    adsData = null;
   };
+
 
   var buttonMouseDownHandler = function (evt) {
     if (evt.button === 0) {
