@@ -3,6 +3,7 @@
 (function () {
 
   var mapPin = document.querySelector('.map__pin--main');
+  var mapFiltersForm = document.querySelector('.map__filters');
   var adsData = null;
 
   var moveParams = {
@@ -85,6 +86,14 @@
   var adFormResetClickHandler = function () {
     setupPageInactive();
   };
+
+
+
+  var mapFiltersChangeHandler = function (filteredAds) {
+    window.map.renderPinsOnMap(filteredAds, window.pin.createPin);
+  }
+
+  mapFiltersForm
 
 
   var dataReceivedSuccess = function (receivedAds) {

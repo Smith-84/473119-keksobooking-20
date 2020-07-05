@@ -9,6 +9,7 @@
   var openCardOnMap = null;
 
   var renderPinsOnMap = function (adsData, createPin) {
+    deleteRenderedPins();
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < adsData.length; i++) {
       var newAdsElement = createPin(adsData[i], i);
