@@ -78,6 +78,7 @@
     }
   };
 
+
   var setupPriceMinValue = function () {
     switch (typeHouse.value) {
       case 'flat':
