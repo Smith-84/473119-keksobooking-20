@@ -4,6 +4,18 @@
 
   var mapPin = document.querySelector('.map__pin--main');
   var mapFiltersForm = document.querySelector('.map__filters');
+
+  var housingType = document.querySelector('#housing-type');
+  var housingPrice = document.querySelector('#housing-price');
+  var housingRooms = document.querySelector('#housing-rooms');
+  var housingGuests = document.querySelector('#housing-guests');
+  var filterWifi = document.querySelector('#filter-wifi');
+  var filterParking = document.querySelector('#filter-parking');
+  var filterDishwasher = document.querySelector('#filter-dishwasher');
+  var filterWasher = document.querySelector('#filter-washer');
+  var filterElevator = document.querySelector('#filter-elevator');
+  var filterConditioner = document.querySelector('#filter-conditioner');
+
   var adsData = null;
 
   var moveParams = {
@@ -87,13 +99,36 @@
     setupPageInactive();
   };
 
+  //filter form
 
 
-  var mapFiltersChangeHandler = function (filteredAds) {
+
+  var getFilteredAds = function () {
+    return adsData.filter(function (ad) {
+      return ad.offer.type === housingType.value
+    })
+  }
+
+  var mapFiltersChangeHandler = function () {
+    var filteredAds = []
+
+    if (housingType.value !== 'any') {
+
+      filteredAds = getFilteredAds()
+
+    } else {
+
+      filteredAds = adsData
+
+    }
     window.map.renderPinsOnMap(filteredAds, window.pin.createPin);
   }
 
-  mapFiltersForm
+  mapFiltersForm.addEventListener('change', mapFiltersChangeHandler)
+
+
+
+  //filter form
 
 
   var dataReceivedSuccess = function (receivedAds) {
