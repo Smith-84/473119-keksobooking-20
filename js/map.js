@@ -8,11 +8,11 @@
   var renderedPinsOnMap = [];
   var openCardOnMap = null;
 
-  var renderPinsOnMap = function (adsData, createPin) {
+  var renderPinsOnMap = function (adsData, createPin) {;
     deleteRenderedPins();
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < adsData.length; i++) {
-      var newAdsElement = createPin(adsData[i], i);
+      var newAdsElement = createPin(adsData[i]);
       renderedPinsOnMap.push(newAdsElement);
       fragment.appendChild(newAdsElement);
     }
@@ -36,7 +36,7 @@
     }
   };
 
-  var setupMapActive = function (adsData, mapClickHandler, mapKeyDownHandler) {
+  var setupMapActive = function (mapClickHandler, mapKeyDownHandler) {
     cityMap.classList.remove('map--faded');
     cityMapAds.addEventListener('click', mapClickHandler);
     cityMapAds.addEventListener('keydown', mapKeyDownHandler);
@@ -51,6 +51,7 @@
 
   window.map = {
     mapOverlay: cityMapAds,
+    renderedPinsOnMap: renderedPinsOnMap,
     setupMapActive: setupMapActive,
     setupMapInActive: setupMapInActive,
     renderCardOnMap: renderCardOnMap,

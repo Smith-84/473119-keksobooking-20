@@ -9,6 +9,7 @@
   var housingPrice = document.querySelector('#housing-price');
   var housingRooms = document.querySelector('#housing-rooms');
   var housingGuests = document.querySelector('#housing-guests');
+
   var filterWifi = document.querySelector('#filter-wifi');
   var filterParking = document.querySelector('#filter-parking');
   var filterDishwasher = document.querySelector('#filter-dishwasher');
@@ -42,7 +43,10 @@
       if (numberPin) {
         actionOnCloseCard();
         window.pin.pinClickHandler(button);
-        var card = window.card.createCard(adsData[numberPin], actionOnCloseCard);
+        var currentAd = adsData.filter(function (ad) {
+          return ad.author.avatar.replace(/[^\d;]/g, '') === numberPin;
+        })
+        var card = window.card.createCard(currentAd[0], actionOnCloseCard);
         window.map.renderCardOnMap(card);
       }
     }
@@ -53,7 +57,7 @@
   };
 
   var prepareData = function (receivedAds) {
-    return receivedAds.slice(0, window.ADS_COUNT).filter(function (ad) {
+    return receivedAds.filter(function (ad) {
       return ad.offer !== 'undefined';
     });
   };
@@ -99,36 +103,39 @@
     setupPageInactive();
   };
 
-  //filter form
 
-
-
-  var getFilteredAds = function () {
-    return adsData.filter(function (ad) {
-      return ad.offer.type === housingType.value
+  var getFilteredAds = function (ads) {
+    return ads.filter(function (ad) {
+      return ad.offer.type === housingType.value || housingType.value === 'any'
+    }).filter(function (ad) {
+      return ad.offer.rooms === Number(housingRooms.value) || housingRooms.value === 'any'
+    }).filter(function (ad) {
+      if (housingPrice.value === 'low') {
+        return ad.offer.price < 10000
+      } else if (housingPrice.value === 'middle') {
+        return 1000 >= ad.offer.price < 50000
+      } else if (housingPrice.value === 'high') {
+        return ad.offer.price >= 50000
+      } else {
+        return ad
+      }
+    }).filter(function (ad) {
+      return ad.offer.guests === housingGuests.value
+      // if (housingGuests.value === 1) {
+      //
+      // } else if (housingGuests.value === 2) {
+      //   return ad.offer.guests = 2
+      // } else {
+      //   return ad
+      // }
     })
   }
 
   var mapFiltersChangeHandler = function () {
-    var filteredAds = []
-
-    if (housingType.value !== 'any') {
-
-      filteredAds = getFilteredAds()
-
-    } else {
-
-      filteredAds = adsData
-
-    }
-    window.map.renderPinsOnMap(filteredAds, window.pin.createPin);
+    var filteredAds = getFilteredAds(adsData)
+    actionOnCloseCard();
+    window.map.renderPinsOnMap(filteredAds.slice(0, window.COUNT_TO_RENDER), window.pin.createPin);
   }
-
-  mapFiltersForm.addEventListener('change', mapFiltersChangeHandler)
-
-
-
-  //filter form
 
 
   var dataReceivedSuccess = function (receivedAds) {
@@ -136,8 +143,9 @@
     mapPin.removeEventListener('mousedown', buttonMouseDownHandler);
     mapPin.removeEventListener('keydown', buttonKeyDownHandler);
     window.form.activateForm(mapPin, adFormSubmitHandler, adFormResetClickHandler);
-    window.map.setupMapActive(adsData, mapClickHandler, mapKeyDownHandler);
-    window.map.renderPinsOnMap(adsData, window.pin.createPin);
+    window.map.setupMapActive(mapClickHandler, mapKeyDownHandler);
+    window.map.renderPinsOnMap(adsData.slice(0,  window.COUNT_TO_RENDER), window.pin.createPin);
+    mapFiltersForm.addEventListener('change', mapFiltersChangeHandler)
     mapPin.addEventListener('mousedown', mapPinMouseDownHandler);
   };
 
