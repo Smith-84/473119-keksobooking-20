@@ -15,13 +15,14 @@
     }
   };
 
-  var createPin = function (ad) {
+  var createPin = function (ad, dataNumber) {
     var pinWidth = 50;
     var pinHeight = 70;
     var templateAds = document.querySelector('#pin').content.querySelector('.map__pin');
     var newPin = templateAds.cloneNode(true);
     var image = newPin.querySelector('img');
-    newPin.dataset.card = ad.author.avatar.replace(/[^\d;]/g, '');
+    newPin.dataset.card = dataNumber;
+    // newPin.dataset.card = ad.author.avatar.replace(/[^\d;]/g, '');
     newPin.style.left = String(ad.location.x - pinWidth / 2) + 'px';
     newPin.style.top = String(ad.location.y - pinHeight) + 'px';
     image.src = ad.author.avatar;

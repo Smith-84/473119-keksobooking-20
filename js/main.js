@@ -43,10 +43,11 @@
       if (numberPin) {
         actionOnCloseCard();
         window.pin.pinClickHandler(button);
-        var currentAd = adsData.filter(function (ad) {
-          return ad.author.avatar.replace(/[^\d;]/g, '') === numberPin;
-        })
-        var card = window.card.createCard(currentAd[0], actionOnCloseCard);
+        // var currentAd = adsData.filter(function (ad) {
+        //   return ad.author.avatar.replace(/[^\d;]/g, '') === numberPin;
+        // })
+
+        var card = window.card.createCard(adsData[numberPin], actionOnCloseCard);
         window.map.renderCardOnMap(card);
       }
     }
@@ -120,22 +121,23 @@
         return ad
       }
     }).filter(function (ad) {
-      return ad.offer.guests === housingGuests.value
-      // if (housingGuests.value === 1) {
-      //
-      // } else if (housingGuests.value === 2) {
-      //   return ad.offer.guests = 2
-      // } else {
-      //   return ad
-      // }
+      if (housingGuests.value === '1') {
+        return ad.offer.guests === 1
+      } else if (housingGuests.value === '2') {
+        return ad.offer.guests === 2
+      } else if (housingGuests.value === '0'){
+        return ad.offer.guests === 0
+      } else {
+        return ad
+      }
     })
-  }
+  };
 
   var mapFiltersChangeHandler = function () {
-    var filteredAds = getFilteredAds(adsData)
+    var filteredAds = getFilteredAds(adsData);
     actionOnCloseCard();
-    window.map.renderPinsOnMap(filteredAds.slice(0, window.COUNT_TO_RENDER), window.pin.createPin);
-  }
+    window.map.renderPinsOnMap(adsData, filteredAds.slice(0, window.COUNT_TO_RENDER), window.pin.createPin);
+  };
 
 
   var dataReceivedSuccess = function (receivedAds) {
@@ -144,7 +146,7 @@
     mapPin.removeEventListener('keydown', buttonKeyDownHandler);
     window.form.activateForm(mapPin, adFormSubmitHandler, adFormResetClickHandler);
     window.map.setupMapActive(mapClickHandler, mapKeyDownHandler);
-    window.map.renderPinsOnMap(adsData.slice(0,  window.COUNT_TO_RENDER), window.pin.createPin);
+    window.map.renderPinsOnMap(adsData, adsData.slice(0,  window.COUNT_TO_RENDER), window.pin.createPin);
     mapFiltersForm.addEventListener('change', mapFiltersChangeHandler)
     mapPin.addEventListener('mousedown', mapPinMouseDownHandler);
   };
