@@ -51,7 +51,6 @@
 
   window.map = {
     mapOverlay: cityMapAds,
-    renderedPinsOnMap: renderedPinsOnMap,
     setupMapActive: setupMapActive,
     setupMapInActive: setupMapInActive,
     renderCardOnMap: renderCardOnMap,

@@ -4,19 +4,6 @@
 
   var mapPin = document.querySelector('.map__pin--main');
   var mapFiltersForm = document.querySelector('.map__filters');
-
-  var housingType = document.querySelector('#housing-type');
-  var housingPrice = document.querySelector('#housing-price');
-  var housingRooms = document.querySelector('#housing-rooms');
-  var housingGuests = document.querySelector('#housing-guests');
-
-  var filterWifi = document.querySelector('#filter-wifi');
-  var filterParking = document.querySelector('#filter-parking');
-  var filterDishwasher = document.querySelector('#filter-dishwasher');
-  var filterWasher = document.querySelector('#filter-washer');
-  var filterElevator = document.querySelector('#filter-elevator');
-  var filterConditioner = document.querySelector('#filter-conditioner');
-
   var adsData = null;
 
   var moveParams = {
@@ -43,10 +30,6 @@
       if (numberPin) {
         actionOnCloseCard();
         window.pin.pinClickHandler(button);
-        // var currentAd = adsData.filter(function (ad) {
-        //   return ad.author.avatar.replace(/[^\d;]/g, '') === numberPin;
-        // })
-
         var card = window.card.createCard(adsData[numberPin], actionOnCloseCard);
         window.map.renderCardOnMap(card);
       }
@@ -104,41 +87,11 @@
     setupPageInactive();
   };
 
-
-  var getFilteredAds = function (ads) {
-    return ads.filter(function (ad) {
-      return ad.offer.type === housingType.value || housingType.value === 'any'
-    }).filter(function (ad) {
-      return ad.offer.rooms === Number(housingRooms.value) || housingRooms.value === 'any'
-    }).filter(function (ad) {
-      if (housingPrice.value === 'low') {
-        return ad.offer.price < 10000
-      } else if (housingPrice.value === 'middle') {
-        return 1000 >= ad.offer.price < 50000
-      } else if (housingPrice.value === 'high') {
-        return ad.offer.price >= 50000
-      } else {
-        return ad
-      }
-    }).filter(function (ad) {
-      if (housingGuests.value === '1') {
-        return ad.offer.guests === 1
-      } else if (housingGuests.value === '2') {
-        return ad.offer.guests === 2
-      } else if (housingGuests.value === '0'){
-        return ad.offer.guests === 0
-      } else {
-        return ad
-      }
-    })
-  };
-
   var mapFiltersChangeHandler = function () {
-    var filteredAds = getFilteredAds(adsData);
+    var filteredAds = window.getFilteredAds(adsData);
     actionOnCloseCard();
     window.map.renderPinsOnMap(adsData, filteredAds.slice(0, window.COUNT_TO_RENDER), window.pin.createPin);
   };
-
 
   var dataReceivedSuccess = function (receivedAds) {
     adsData = prepareData(receivedAds);
@@ -146,8 +99,8 @@
     mapPin.removeEventListener('keydown', buttonKeyDownHandler);
     window.form.activateForm(mapPin, adFormSubmitHandler, adFormResetClickHandler);
     window.map.setupMapActive(mapClickHandler, mapKeyDownHandler);
-    window.map.renderPinsOnMap(adsData, adsData.slice(0,  window.COUNT_TO_RENDER), window.pin.createPin);
-    mapFiltersForm.addEventListener('change', mapFiltersChangeHandler)
+    window.map.renderPinsOnMap(adsData, adsData.slice(0, window.COUNT_TO_RENDER), window.pin.createPin);
+    mapFiltersForm.addEventListener('change', mapFiltersChangeHandler);
     mapPin.addEventListener('mousedown', mapPinMouseDownHandler);
   };
 
@@ -164,6 +117,7 @@
     window.form.deactivateForm(mapPin, adFormSubmitHandler, adFormResetClickHandler);
     window.map.setupMapInActive(mapClickHandler, mapKeyDownHandler);
     actionOnCloseCard();
+    mapFiltersForm.removeEventListener('change', mapFiltersChangeHandler);
     mapPin.addEventListener('keydown', buttonKeyDownHandler);
     mapPin.addEventListener('mousedown', buttonMouseDownHandler);
     adsData = null;
