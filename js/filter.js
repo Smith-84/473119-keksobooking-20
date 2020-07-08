@@ -8,6 +8,7 @@
   var housingGuests = document.querySelector('#housing-guests');
 
   window.getFilteredAds = function (ads) {
+    console.log(ads[0].offer.features)
     return ads.filter(function (ad) {
       return ad.offer.type === housingType.value || housingType.value === 'any';
     }).filter(function (ad) {
