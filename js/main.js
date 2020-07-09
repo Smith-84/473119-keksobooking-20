@@ -88,19 +88,11 @@
   };
 
 
-
   var mapFiltersChangeHandler = function (evt) {
     evt.preventDefault();
-    console.log('hui2')
-    // window.getFilteredAds(adsData);
-    // var filteredAds = window.getFilteredAds(adsData)
-    // window.checkFeatures()
-    // actionOnCloseCard();
-    var ren = function () {
-      console.log('hui')
-      // window.map.renderPinsOnMap(adsData, filteredAds.slice(0, window.COUNT_TO_RENDER), window.pin.createPin)
-    }
-    window.debounce(ren);
+    var filteredAds = window.getFilteredAds(adsData);
+    actionOnCloseCard();
+    window.map.renderPinsOnMap(adsData, filteredAds.slice(0, window.COUNT_TO_RENDER), window.pin.createPin)
   };
 
   var dataReceivedSuccess = function (receivedAds) {
