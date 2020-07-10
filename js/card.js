@@ -50,15 +50,25 @@
     };
 
     popupTitle.textContent = ad.offer.title;
+
     popupAddress.textContent = ad.offer.address;
+
     popupPrice.textContent = ad.offer.price + '₽/ночь.';
+
     popupType.textContent = namesTypeHouses[ad.offer.type];
+
     popupCapacity.textContent = ad.offer.rooms + ' комнаты для ' + ad.offer.guests + ' гостей';
+
     popupTime.textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout;
+
     popupFeatures.appendChild(featuresSetup());
+
     popupDesc.textContent = ad.offer.description;
+
     photo.replaceWith(photosSetup());
+
     popupAvatar.src = ad.author.avatar;
+
     btnClose.addEventListener('click', btnCloseClickHandler);
 
     return newCardBlock;
