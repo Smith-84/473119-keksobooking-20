@@ -62,13 +62,13 @@
 
   window.getFilteredAds = function (ads) {
     var filteredAds = [];
-    var filerSettings = createFilter();
-    var filerActions = [checkType, checkRooms, checkPrice, checkGuests, checkFeatures];
+    var filterSettings = createFilter();
+    var filterActions = [checkType, checkRooms, checkPrice, checkGuests, checkFeatures];
 
     for (var i = 0; i < ads.length; i++) {
       var flag = true;
-      for (var j = 0; j < filerActions.length; j++) {
-        if (!filerActions[j](ads[i], filerSettings)) {
+      for (var j = 0; j < filterActions.length; j++) {
+        if (!filterActions[j](ads[i], filterSettings)) {
           flag = false;
           break;
         }
@@ -77,6 +77,8 @@
         filteredAds.push(ads[i]);
       }
     }
+
+
     return filteredAds;
   };
 }

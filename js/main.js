@@ -92,10 +92,8 @@
     evt.preventDefault();
     var filteredAds = window.getFilteredAds(adsData);
     actionOnCloseCard();
-    var updatePins = window.debounce(function () {
-      window.map.renderPinsOnMap(adsData, filteredAds.slice(0, window.COUNT_TO_RENDER), window.pin.createPin);
-    });
-    updatePins();
+    var debouncedRender = window.debounce(window.map.renderPinsOnMap);
+    debouncedRender(adsData, filteredAds.slice(0, window.COUNT_TO_RENDER), window.pin.createPin)
   };
 
   var dataReceivedSuccess = function (receivedAds) {
