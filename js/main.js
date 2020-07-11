@@ -88,13 +88,12 @@
   };
 
 
-  var mapFiltersChangeHandler = function (evt) {
+  var mapFiltersChangeHandler = window.debounce(function (evt) {
     evt.preventDefault();
     var filteredAds = window.getFilteredAds(adsData);
     actionOnCloseCard();
-    var debouncedRender = window.debounce(window.map.renderPinsOnMap);
-    debouncedRender(adsData, filteredAds.slice(0, window.COUNT_TO_RENDER), window.pin.createPin);
-  };
+    window.map.renderPinsOnMap(adsData, filteredAds.slice(0, window.COUNT_TO_RENDER), window.pin.createPin);
+  });
 
   var dataReceivedSuccess = function (receivedAds) {
     adsData = prepareData(receivedAds);
