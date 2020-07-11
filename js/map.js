@@ -8,10 +8,11 @@
   var renderedPinsOnMap = [];
   var openCardOnMap = null;
 
-  var renderPinsOnMap = function (adsData, createPin) {
+  var renderPinsOnMap = function (adsData, currentAds, createPin) {
+    deleteRenderedPins();
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < adsData.length; i++) {
-      var newAdsElement = createPin(adsData[i], i);
+    for (var i = 0; i < currentAds.length; i++) {
+      var newAdsElement = createPin(currentAds[i], adsData.indexOf(currentAds[i]));
       renderedPinsOnMap.push(newAdsElement);
       fragment.appendChild(newAdsElement);
     }
@@ -35,7 +36,7 @@
     }
   };
 
-  var setupMapActive = function (adsData, mapClickHandler, mapKeyDownHandler) {
+  var setupMapActive = function (mapClickHandler, mapKeyDownHandler) {
     cityMap.classList.remove('map--faded');
     cityMapAds.addEventListener('click', mapClickHandler);
     cityMapAds.addEventListener('keydown', mapKeyDownHandler);

@@ -3,6 +3,7 @@
 (function () {
 
   var mapPin = document.querySelector('.map__pin--main');
+  var mapFiltersForm = document.querySelector('.map__filters');
   var adsData = null;
 
   var moveParams = {
@@ -40,7 +41,7 @@
   };
 
   var prepareData = function (receivedAds) {
-    return receivedAds.slice(0, window.ADS_COUNT).filter(function (ad) {
+    return receivedAds.filter(function (ad) {
       return ad.offer !== 'undefined';
     });
   };
@@ -87,13 +88,21 @@
   };
 
 
+  var mapFiltersChangeHandler = window.debounce(function (evt) {
+    evt.preventDefault();
+    var filteredAds = window.getFilteredAds(adsData);
+    actionOnCloseCard();
+    window.map.renderPinsOnMap(adsData, filteredAds.slice(0, window.COUNT_TO_RENDER), window.pin.createPin);
+  });
+
   var dataReceivedSuccess = function (receivedAds) {
     adsData = prepareData(receivedAds);
     mapPin.removeEventListener('mousedown', buttonMouseDownHandler);
     mapPin.removeEventListener('keydown', buttonKeyDownHandler);
     window.form.activateForm(mapPin, adFormSubmitHandler, adFormResetClickHandler);
-    window.map.setupMapActive(adsData, mapClickHandler, mapKeyDownHandler);
-    window.map.renderPinsOnMap(adsData, window.pin.createPin);
+    window.map.setupMapActive(mapClickHandler, mapKeyDownHandler);
+    window.map.renderPinsOnMap(adsData, adsData.slice(0, window.COUNT_TO_RENDER), window.pin.createPin);
+    mapFiltersForm.addEventListener('change', mapFiltersChangeHandler);
     mapPin.addEventListener('mousedown', mapPinMouseDownHandler);
   };
 
@@ -110,6 +119,7 @@
     window.form.deactivateForm(mapPin, adFormSubmitHandler, adFormResetClickHandler);
     window.map.setupMapInActive(mapClickHandler, mapKeyDownHandler);
     actionOnCloseCard();
+    mapFiltersForm.removeEventListener('submit', mapFiltersChangeHandler);
     mapPin.addEventListener('keydown', buttonKeyDownHandler);
     mapPin.addEventListener('mousedown', buttonMouseDownHandler);
     adsData = null;
