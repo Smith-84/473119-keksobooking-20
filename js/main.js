@@ -93,8 +93,8 @@
     evt.preventDefault();
     var filteredAds = window.getFilteredAds(adsData);
     actionOnCloseCard();
-    debouncedRender(adsData, filteredAds.slice(0, window.COUNT_TO_RENDER), window.pin.createPin)
-  }
+    debouncedRender(adsData, filteredAds.slice(0, window.COUNT_TO_RENDER), window.pin.createPin);
+  };
 
   var dataReceivedSuccess = function (receivedAds) {
     adsData = prepareData(receivedAds);

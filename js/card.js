@@ -4,10 +4,11 @@
 
   var checkElem = function (elem, adProp) {
     if (adProp) {
-      return elem.textContent = adProp
+      elem.textContent = adProp;
+      return elem;
     }
     return elem.remove();
-  }
+  };
 
   var createCard = function (ad, btnCloseClickHandler) {
     var templateCard = document.querySelector('#card').content.querySelector('.map__card');
@@ -87,14 +88,14 @@
     if (ad.offer.features.length > 0) {
       popupFeatures.appendChild(featuresSetup());
     } else {
-      popupFeatures.remove()
+      popupFeatures.remove();
     }
 
     if (ad.offer.photos.length > 0) {
       photo.replaceWith(photosSetup());
     } else {
-      popupPhotos.remove()
-      photo.remove()
+      popupPhotos.remove();
+      photo.remove();
     }
 
     if (ad.author.avatar) {
