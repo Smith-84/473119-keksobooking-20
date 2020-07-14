@@ -9,13 +9,13 @@
     activePin = button;
   };
 
-  var deactivatePin = function () {
+  var deactivate = function () {
     if (activePin) {
       activePin.classList.remove('map__pin--active');
     }
   };
 
-  var createPin = function (ad, dataNumber) {
+  var create = function (ad, dataNumber) {
     var pinWidth = 50;
     var pinHeight = 70;
     var templateAds = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -30,8 +30,8 @@
   };
 
   window.pin = {
-    createPin: createPin,
-    deactivatePin: deactivatePin,
+    create: create,
+    deactivate: deactivate,
     pinClickHandler: pinClickHandler
   };
 

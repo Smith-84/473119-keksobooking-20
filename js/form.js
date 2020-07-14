@@ -26,7 +26,7 @@
     }
   };
 
-  var elementsHandler = function (elements, disabled) {
+  var setupElemStatus = function (elements, disabled) {
     for (var i = 0; i < elements.length; i++) {
       elements[i].disabled = disabled;
     }
@@ -35,8 +35,8 @@
   var setupFormElementStatus = function (status) {
     var fieldSetForm = document.querySelectorAll('fieldset');
     var selectForm = document.querySelectorAll('select');
-    elementsHandler(fieldSetForm, status.disabled);
-    elementsHandler(selectForm, status.disabled);
+    setupElemStatus(fieldSetForm, status.disabled);
+    setupElemStatus(selectForm, status.disabled);
   };
 
   var setupValidityCapacity = function () {
@@ -50,9 +50,8 @@
       capacity.setCustomValidity('Для трех комнат - нельзя выбрать - Не для гостей');
     } else if (roomVal === '100' && capVal !== '0') {
       capacity.setCustomValidity('Только возможно для не гостей!');
-    } else {
-      capacity.setCustomValidity('');
     }
+    return capacity.setCustomValidity('');
   };
 
 
@@ -63,9 +62,8 @@
       return 'Для дома минимальная цена 5 000!';
     } else if (typeHouse.value === 'palace' && price.value < 10000) {
       return 'Для дворца минимальная цена 10 000.';
-    } else {
-      return '';
     }
+    return '';
   };
 
   var getValidateTitle = function () {
@@ -73,9 +71,10 @@
       return 'Заголовок объявления должен состоять минимум из 30 символов';
     } else if (title.validity.tooLong) {
       return 'Заголовок объявления не должен превышать 100 символов';
-    } else {
-      return '';
     }
+
+    return '';
+
   };
 
 
@@ -144,7 +143,6 @@
   };
 
   var removeAdFormAllEvtList = function (adFormSubmitHandler, adFormResetClickHandler) {
-    adForm.reset();
     title.removeEventListener('input', titleInputHandler);
     price.removeEventListener('input', priceInputHandler);
     typeHouse.removeEventListener('change', typeHouseChangeHandler);
@@ -159,14 +157,16 @@
       adForm.classList.add('ad-form--disabled');
       removeAdFormAllEvtList(adFormSubmitHandler, adFormResetClickHandler);
     }
+    adForm.reset();
+    setupPriceMinValue();
     setupFormElementStatus({disabled: true});
     setupAddress(mapPin, {activePage: false});
 
   };
 
   window.form = {
-    activateForm: activateForm,
-    deactivateForm: deactivateForm,
+    activate: activate,
+    deactivate: deactivate,
     setupAddress: setupAddress
   };
 

@@ -95,7 +95,7 @@
     window.map.renderPinsOnMap(adsData, filteredAds.slice(0, window.COUNT_TO_RENDER), window.pin.createPin);
   });
 
-  var dataReceivedSuccess = function (receivedAds) {
+  var dataReceiveSuccess = function (receivedAds) {
     adsData = prepareData(receivedAds);
     mapPin.removeEventListener('mousedown', buttonMouseDownHandler);
     mapPin.removeEventListener('keydown', buttonKeyDownHandler);
@@ -103,17 +103,15 @@
     window.map.setupMapActive(mapClickHandler, mapKeyDownHandler);
     window.map.renderPinsOnMap(adsData, adsData.slice(0, window.COUNT_TO_RENDER), window.pin.createPin);
     mapFiltersForm.addEventListener('change', mapFiltersChangeHandler);
-    mapPin.addEventListener('mousedown', mapPinMouseDownHandler);
-  };
 
+  };
 
   var setupPageActive = function () {
     var url = 'https://javascript.pages.academy/keksobooking/data';
-    window.load(url, dataReceivedSuccess);
+    window.load(url, dataReceiveSuccess);
   };
 
   var setupPageInactive = function () {
-    mapPin.removeEventListener('mousedown', mapPinMouseDownHandler);
     mapPin.style.left = 570 + 'px';
     mapPin.style.top = 375 + 'px';
     window.form.deactivateForm(mapPin, adFormSubmitHandler, adFormResetClickHandler);
@@ -141,5 +139,6 @@
   window.form.deactivateForm(mapPin);
   mapPin.addEventListener('keydown', buttonKeyDownHandler);
   mapPin.addEventListener('mousedown', buttonMouseDownHandler);
+  mapPin.addEventListener('mousedown', mapPinMouseDownHandler);
 
 })();

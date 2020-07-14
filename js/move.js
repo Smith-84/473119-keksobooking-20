@@ -30,13 +30,16 @@
         currentY = window.MAX_LIMIT_Y - (moveParams.moveElem.clientHeight + window.TAIL_HEIGHT);
       }
 
-      if (currentX > (moveParams.mapOverlay.clientWidth - moveParams.moveElem.clientWidth)) {
-        currentX = (moveParams.mapOverlay.clientWidth - moveParams.moveElem.clientWidth);
+      console.log(currentX)
+
+      if (currentX > moveParams.mapOverlay.clientWidth - (moveParams.moveElem.clientWidth/2)) {
+        currentX = moveParams.mapOverlay.clientWidth - (moveParams.moveElem.clientWidth/2);
       }
 
-      if (currentX < 0) {
-        currentX = 0;
+      if (currentX < 0 - (moveParams.moveElem.clientWidth)/2) {
+        currentX = 0 - (moveParams.moveElem.clientWidth)/2;
       }
+
       moveParams.moveElem.style.left = currentX + 'px';
       moveParams.moveElem.style.top = currentY + 'px';
       moveParams.setupAddress(moveParams.moveElem, {activePage: true});

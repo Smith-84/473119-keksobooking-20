@@ -10,7 +10,7 @@
     return elem.remove();
   };
 
-  var createCard = function (ad, btnCloseClickHandler) {
+  var create = function (ad, btnCloseClickHandler) {
     var templateCard = document.querySelector('#card').content.querySelector('.map__card');
     var newCardBlock = templateCard.cloneNode(true);
     var popupAvatar = newCardBlock.querySelector('.popup__avatar');
@@ -109,7 +109,7 @@
   };
 
   window.card = {
-    createCard: createCard
+    create: create
   };
 
 })();
