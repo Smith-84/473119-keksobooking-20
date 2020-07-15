@@ -27,7 +27,7 @@
       }
 
       if (currentY > window.const.MAX_LIMIT_Y - (moveParams.moveElem.clientHeight + window.const.TAIL_HEIGHT)) {
-        currentY = window.const.MAX_LIMIT_Y - (moveParams.moveElem.clientHeight +window.const.TAIL_HEIGHT);
+        currentY = window.const.MAX_LIMIT_Y - (moveParams.moveElem.clientHeight + window.const.TAIL_HEIGHT);
       }
 
       if (currentX > moveParams.mapOverlay.clientWidth - (moveParams.moveElem.clientWidth / 2)) {

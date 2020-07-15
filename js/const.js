@@ -7,6 +7,6 @@
     MIN_LIMIT_Y: 130,
     MAX_LIMIT_Y: 630,
     TAIL_HEIGHT: 10
-  }
+  };
 
 })();
