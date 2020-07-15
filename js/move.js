@@ -9,7 +9,7 @@
       x: evt.clientX,
       y: evt.clientY
     };
-    var onMouseMove = function (moveEvt) {
+    var mapOverlayMouseMoveHandler = function (moveEvt) {
       moveEvt.preventDefault();
       var shift = {
         x: startCoords.x - moveEvt.clientX,
@@ -22,14 +22,13 @@
       var currentX = moveParams.moveElem.offsetLeft - shift.x;
       var currentY = moveParams.moveElem.offsetTop - shift.y;
 
-      if (currentY < window.MIN_LIMIT_Y - (moveParams.moveElem.clientHeight + window.TAIL_HEIGHT)) {
-        currentY = window.MIN_LIMIT_Y - (moveParams.moveElem.clientHeight + window.TAIL_HEIGHT);
+      if (currentY < window.const.MIN_LIMIT_Y - (moveParams.moveElem.clientHeight + window.const.TAIL_HEIGHT)) {
+        currentY = window.const.MIN_LIMIT_Y - (moveParams.moveElem.clientHeight + window.const.TAIL_HEIGHT);
       }
 
-      if (currentY > window.MAX_LIMIT_Y - (moveParams.moveElem.clientHeight + window.TAIL_HEIGHT)) {
-        currentY = window.MAX_LIMIT_Y - (moveParams.moveElem.clientHeight + window.TAIL_HEIGHT);
+      if (currentY > window.const.MAX_LIMIT_Y - (moveParams.moveElem.clientHeight + window.const.TAIL_HEIGHT)) {
+        currentY = window.const.MAX_LIMIT_Y - (moveParams.moveElem.clientHeight +window.const.TAIL_HEIGHT);
       }
-
 
       if (currentX > moveParams.mapOverlay.clientWidth - (moveParams.moveElem.clientWidth / 2)) {
         currentX = moveParams.mapOverlay.clientWidth - (moveParams.moveElem.clientWidth / 2);
@@ -44,13 +43,13 @@
       moveParams.setupAddress(moveParams.moveElem, {activePage: true});
     };
 
-    var onMouseUp = function (upEvt) {
+    var documentMouseUpHandler = function (upEvt) {
       upEvt.preventDefault();
-      moveParams.mapOverlay.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
+      moveParams.mapOverlay.removeEventListener('mousemove', mapOverlayMouseMoveHandler);
+      document.removeEventListener('mouseup', documentMouseUpHandler);
     };
-    moveParams.mapOverlay.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
+    moveParams.mapOverlay.addEventListener('mousemove', mapOverlayMouseMoveHandler);
+    document.addEventListener('mouseup', documentMouseUpHandler);
   };
 
 })();

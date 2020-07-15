@@ -19,7 +19,7 @@
     var mapPinHeight = mapPin.clientHeight;
     var newWidth = Math.floor((mapPin.offsetLeft + mapPinWidth / 2));
     if (status.activePage) {
-      address.value = newWidth + ',' + (mapPinHeight + mapPin.offsetTop + window.TAIL_HEIGHT);
+      address.value = newWidth + ',' + (mapPinHeight + mapPin.offsetTop + window.const.TAIL_HEIGHT);
     } else {
       var newHeight = Math.floor(mapPinHeight / 2);
       address.value = newWidth + ',' + (newHeight + mapPin.offsetTop);

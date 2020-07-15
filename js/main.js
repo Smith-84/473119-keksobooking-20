@@ -92,7 +92,7 @@
     evt.preventDefault();
     var filteredAds = window.getFilteredAds(adsData);
     actionOnCloseCard();
-    window.map.renderPins(adsData, filteredAds.slice(0, window.COUNT_TO_RENDER), window.pin.create);
+    window.map.renderPins(adsData, filteredAds.slice(0, window.const.COUNT_TO_RENDER), window.pin.create);
   });
 
   var dataReceiveSuccess = function (receivedAds) {
@@ -101,9 +101,8 @@
     mapPin.removeEventListener('keydown', buttonKeyDownHandler);
     window.form.activate(mapPin, adFormSubmitHandler, adFormResetClickHandler);
     window.map.setupActive(mapClickHandler, mapKeyDownHandler);
-    window.map.renderPins(adsData, adsData.slice(0, window.COUNT_TO_RENDER), window.pin.create);
+    window.map.renderPins(adsData, adsData.slice(0, window.const.COUNT_TO_RENDER), window.pin.create);
     mapFiltersForm.addEventListener('change', mapFiltersChangeHandler);
-
   };
 
   var setupPageActive = function () {

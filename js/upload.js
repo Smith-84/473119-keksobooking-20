@@ -1,13 +1,13 @@
 'use strict';
 (function () {
-  window.upload = function (data, url, onSuccess, onError) {
+  window.upload = function (data, url, dataSubmitSuccess, dataSubmitError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {
       if (xhr.status === 200) {
-        onSuccess();
+        dataSubmitSuccess();
       } else {
-        onError();
+        dataSubmitError();
       }
     });
     xhr.open('POST', url);

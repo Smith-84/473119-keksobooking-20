@@ -1,12 +1,12 @@
 'use strict';
 
 (function () {
-  window.load = function (url, onSuccess) {
+  window.load = function (url, dataReceiveSuccess) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {
       if (xhr.status === 200) {
-        onSuccess(xhr.response);
+        dataReceiveSuccess(xhr.response);
       }
     });
     xhr.timeout = 1000;
