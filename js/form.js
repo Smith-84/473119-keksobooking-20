@@ -17,11 +17,11 @@
     var address = document.querySelector('#address');
     var mapPinWidth = mapPin.clientWidth;
     var mapPinHeight = mapPin.clientHeight;
-    var newWidth = Math.round((mapPin.offsetLeft + mapPinWidth / 2));
+    var newWidth = Math.floor((mapPin.offsetLeft + mapPinWidth / 2));
     if (status.activePage) {
       address.value = newWidth + ',' + (mapPinHeight + mapPin.offsetTop + window.TAIL_HEIGHT);
     } else {
-      var newHeight = Math.round(mapPinHeight / 2);
+      var newHeight = Math.floor(mapPinHeight / 2);
       address.value = newWidth + ',' + (newHeight + mapPin.offsetTop);
     }
   };
@@ -50,8 +50,9 @@
       capacity.setCustomValidity('Для трех комнат - нельзя выбрать - Не для гостей');
     } else if (roomVal === '100' && capVal !== '0') {
       capacity.setCustomValidity('Только возможно для не гостей!');
+    } else {
+      capacity.setCustomValidity('');
     }
-    return capacity.setCustomValidity('');
   };
 
 
@@ -120,7 +121,7 @@
   };
 
 
-  var activateForm = function (mapPin, adFormSubmitHandler, adFormResetClickHandler) {
+  var activate = function (mapPin, adFormSubmitHandler, adFormResetClickHandler) {
     adForm.classList.remove('ad-form--disabled');
     setupFormElementStatus({disabled: false});
     setupAddress(mapPin, {activePage: true});
@@ -136,8 +137,10 @@
     title.addEventListener('input', titleInputHandler);
     price.addEventListener('input', priceInputHandler);
     typeHouse.addEventListener('change', typeHouseChangeHandler);
+
     capacity.addEventListener('change', capacityChangeHandler);
     roomCount.addEventListener('change', roomCountChangeHandler);
+
     adForm.addEventListener('submit', adFormSubmitHandler);
     adFormReset.addEventListener('click', adFormResetClickHandler);
   };
@@ -152,7 +155,7 @@
     adFormReset.removeEventListener('click', adFormResetClickHandler);
   };
 
-  var deactivateForm = function (mapPin, adFormSubmitHandler, adFormResetClickHandler) {
+  var deactivate = function (mapPin, adFormSubmitHandler, adFormResetClickHandler) {
     if (adFormSubmitHandler && adFormResetClickHandler) {
       adForm.classList.add('ad-form--disabled');
       removeAdFormAllEvtList(adFormSubmitHandler, adFormResetClickHandler);

@@ -8,7 +8,7 @@
   var renderedPinsOnMap = [];
   var openCardOnMap = null;
 
-  var renderPinsOnMap = function (adsData, currentAds, createPin) {
+  var renderPins = function (adsData, currentAds, createPin) {
     deleteRenderedPins();
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < currentAds.length; i++) {
@@ -25,24 +25,24 @@
     }
   };
 
-  var renderCardOnMap = function (card) {
+  var renderCard = function (card) {
     openCardOnMap = card;
     mapFilters.before(card);
   };
 
-  var closeCardOnMap = function () {
+  var closeCard = function () {
     if (openCardOnMap) {
       openCardOnMap.remove();
     }
   };
 
-  var setupMapActive = function (mapClickHandler, mapKeyDownHandler) {
+  var setupActive = function (mapClickHandler, mapKeyDownHandler) {
     cityMap.classList.remove('map--faded');
     cityMapAds.addEventListener('click', mapClickHandler);
     cityMapAds.addEventListener('keydown', mapKeyDownHandler);
   };
 
-  var setupMapInActive = function (mapClickHandler, mapKeyDownHandler) {
+  var setupInActive = function (mapClickHandler, mapKeyDownHandler) {
     cityMap.classList.add('map--faded');
     deleteRenderedPins();
     cityMapAds.removeEventListener('keydown', mapClickHandler);
@@ -53,9 +53,9 @@
     mapOverlay: cityMapAds,
     setupActive: setupActive,
     setupInActive: setupInActive,
-    renderCardOnMap: renderCardOnMap,
-    renderPinsOnMap: renderPinsOnMap,
-    closeCardOnMap: closeCardOnMap
+    renderCard: renderCard,
+    renderPins: renderPins,
+    closeCard: closeCard
   };
 
 

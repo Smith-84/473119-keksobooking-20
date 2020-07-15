@@ -4,7 +4,7 @@
   var activePin = null;
 
   var pinClickHandler = function (button) {
-    deactivatePin();
+    deactivate();
     button.classList.add('map__pin--active');
     activePin = button;
   };

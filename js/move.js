@@ -2,7 +2,7 @@
 
 (function () {
 
-  var movePin = function (evt, moveParams) {
+  window.move = function (evt, moveParams) {
     evt.preventDefault();
     moveParams.moveElem.style.zIndex = 2;
     var startCoords = {
@@ -30,14 +30,13 @@
         currentY = window.MAX_LIMIT_Y - (moveParams.moveElem.clientHeight + window.TAIL_HEIGHT);
       }
 
-      console.log(currentX)
 
-      if (currentX > moveParams.mapOverlay.clientWidth - (moveParams.moveElem.clientWidth/2)) {
-        currentX = moveParams.mapOverlay.clientWidth - (moveParams.moveElem.clientWidth/2);
+      if (currentX > moveParams.mapOverlay.clientWidth - (moveParams.moveElem.clientWidth / 2)) {
+        currentX = moveParams.mapOverlay.clientWidth - (moveParams.moveElem.clientWidth / 2);
       }
 
-      if (currentX < 0 - (moveParams.moveElem.clientWidth)/2) {
-        currentX = 0 - (moveParams.moveElem.clientWidth)/2;
+      if (currentX < 0 - (moveParams.moveElem.clientWidth) / 2) {
+        currentX = 0 - (moveParams.moveElem.clientWidth) / 2;
       }
 
       moveParams.moveElem.style.left = currentX + 'px';
@@ -52,10 +51,6 @@
     };
     moveParams.mapOverlay.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
-  };
-
-  window.move = {
-    movePin: movePin
   };
 
 })();
