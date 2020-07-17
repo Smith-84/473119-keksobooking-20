@@ -35,7 +35,7 @@
       }
 
       if (currentX < 0 - (moveParams.moveElem.clientWidth) / 2) {
-        currentX = 0 - (moveParams.moveElem.clientWidth) / 2;
+        currentX = -(moveParams.moveElem.clientWidth) / 2;
       }
 
       moveParams.moveElem.style.left = currentX + 'px';
